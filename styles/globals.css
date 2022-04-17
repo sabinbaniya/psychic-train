@@ -1,16 +1,44 @@
-html,
-body {
-  padding: 0;
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@100;300;400;500;700&display=swap");
 
 * {
-  box-sizing: border-box;
+  font-family: "Inter", sans-serif;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.form_input {
+  @apply border-2 border-gray-500 outline-blue-500 rounded-md h-8 px-2;
+}
+
+.form_error {
+  animation: errorAnimation 0.5s linear;
+  @apply text-red-400 text-sm font-bold bottom-4;
+}
+
+.form_div {
+  @apply flex flex-col my-4 space-y-1;
+}
+
+@keyframes errorAnimation {
+  0% {
+    padding-left: 0rem;
+  }
+
+  25% {
+    padding-left: 0.5rem;
+  }
+
+  50% {
+    padding-left: 0rem;
+  }
+
+  75% {
+    padding-left: 0.5rem;
+  }
+
+  100% {
+    padding-left: 0rem;
+  }
 }
