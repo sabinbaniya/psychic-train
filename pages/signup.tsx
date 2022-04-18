@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import axiosInstance from "../axios/axiosInstance";
+import Link from "next/link";
 
 const signup = () => {
   const {
@@ -68,7 +69,10 @@ const signup = () => {
       <div className='min-h-screen grid place-items-center '>
         <div className='w-11/12 mx-auto'>
           <h1 className='font-bold text-2xl text-center'>
-            Signup | Create a new Account
+            Signup | Already have a account? Login
+            <Link href='/login'>
+              <a className='underline underline-offset-2 '> here</a>
+            </Link>
           </h1>
           <form
             className='my-12 max-w-md mx-auto'

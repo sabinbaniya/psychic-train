@@ -1,4 +1,5 @@
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -47,12 +48,15 @@ const login = () => {
   return (
     <>
       <Head>
-        <title>Chat App | Sign Up</title>
+        <title>Chat App | Log In</title>
       </Head>
       <div className='min-h-screen grid place-items-center '>
         <div className='w-11/12 mx-auto'>
           <h1 className='font-bold text-2xl text-center'>
-            Login | Login to your Account
+            Login | Or Create a account{" "}
+            <Link href='/signup'>
+              <a className='underline underline-offset-2 '>here</a>
+            </Link>
           </h1>
           <form
             className='my-12 max-w-md mx-auto'
