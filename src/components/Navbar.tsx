@@ -1,9 +1,21 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
+import axiosInstance from "../../axios/axiosInstance";
 
 const Navbar = () => {
   const [showSettings, setShowSettings] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await axiosInstance.get("/api/auth/logout");
+      router.push("/login");
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   return (
     <nav className='shadow-sm h-[10vh] w-screen relative'>
@@ -32,7 +44,9 @@ const Navbar = () => {
             <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1'>
               more settings
             </a>
-            <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mb-2'>
+            <a
+              className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mb-2'
+              onClick={handleLogout}>
               logout
             </a>
           </div>
