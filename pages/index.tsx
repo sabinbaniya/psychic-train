@@ -1,10 +1,14 @@
 import type { NextPage } from "next";
-import { Navbar } from "../src/components";
+import { Chatbox, Navbar, Sidebar } from "../src/components";
 
 const Home: NextPage = () => {
   return (
     <>
       <Navbar />
+      <div className='flex'>
+        <Sidebar />
+        <Chatbox />
+      </div>
     </>
   );
 };

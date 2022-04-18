@@ -1,3 +1,5 @@
 import Navbar from "./Navbar";
+import Sidebar from "./Sidebar";
+import Chatbox from "./Chatbox";
 
-export { Navbar };
+export { Navbar, Sidebar, Chatbox };
