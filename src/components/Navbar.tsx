@@ -4,7 +4,14 @@ import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axiosInstance from "../../axios/axiosInstance";
 
-const Navbar = () => {
+interface props {
+  userInfo?: {
+    name: string;
+    status: string;
+  };
+}
+
+const Navbar = ({ userInfo }: props) => {
   const [showSettings, setShowSettings] = useState(false);
   const router = useRouter();
 
@@ -25,7 +32,16 @@ const Navbar = () => {
           height='50px'
           width='50px'
           className='rounded-full'></Image>
-        <p className='font-medium text-lg md:text-xl'>Start Messaging</p>
+        <div className='text-center'>
+          {userInfo ? (
+            <>
+              <p className='font-medium text-lg md:text-xl'>{userInfo.name}</p>
+              <p className='font-light text-gray-500'>{userInfo.status}</p>
+            </>
+          ) : (
+            <p>Start Messaging</p>
+          )}
+        </div>
         <div
           className='flex justify-between items-center space-x-2 cursor-pointer relative'
           onClick={() => setShowSettings((prev) => !prev)}>
