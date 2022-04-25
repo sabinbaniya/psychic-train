@@ -1,5 +1,10 @@
 import Image from "next/image";
-import { Dispatch, SetStateAction } from "react";
+import {
+  ChangeEventHandler,
+  Dispatch,
+  SetStateAction,
+  SyntheticEvent,
+} from "react";
 
 interface IUserInfo {
   name: string;
@@ -18,11 +23,11 @@ const Sidebar = ({ setSelectedUser, setUserInfo }: props) => {
 
   return (
     <div className='basis-1/3 max-w-xs bg-gray-100 h-[90vh] w-full overflow-y-auto'>
-      <form className='w-full h-12 grid place-items-center'>
+      <form className='w-full h-12 grid place-items-center border-bottom-1'>
         <input
           autoComplete='off'
           type='text'
-          name='user'
+          name='query'
           id='user'
           placeholder='Search'
           className='border-2 border-gray-400 outline-gray-500 rounded-full h-8 px-2 w-10/12 mx-auto'

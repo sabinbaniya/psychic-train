@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
@@ -45,7 +46,7 @@ const Navbar = ({ userInfo }: props) => {
         <div
           className='flex justify-between items-center space-x-2 cursor-pointer relative'
           onClick={() => setShowSettings((prev) => !prev)}>
-          <p className='hidden sm:block font-medium text-md'>Settings</p>
+          <p className='hidden sm:block font-medium text-md'>More</p>
           <BsThreeDotsVertical />
           <div
             className={`absolute right-4 top-14 w-36 text-center shadow-md rounded-md bg-white ${
@@ -54,6 +55,11 @@ const Navbar = ({ userInfo }: props) => {
             <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
               profile
             </a>
+            <Link href='/search'>
+              <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
+                search people
+              </a>
+            </Link>
             <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1'>
               options
             </a>
