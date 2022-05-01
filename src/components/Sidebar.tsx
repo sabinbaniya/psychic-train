@@ -73,7 +73,6 @@ const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await axiosInstance.get("/api/chat/getAllFriends");
-      console.log(res.data);
       setMainFriendsList(res.data);
       setFriendsList(res.data);
     };

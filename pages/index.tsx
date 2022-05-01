@@ -7,10 +7,15 @@ interface IUserInfo {
   status: string;
 }
 
+interface IUser {
+  name: String;
+}
+
 const Home: NextPage = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [userInfo, setUserInfo] = useState<IUserInfo | undefined>(undefined);
   const [windowWidth, setWindowWidth] = useState(0);
+  const [user, setUser] = useState<IUser | null>(null);
 
   const checkSize = () => {
     setWindowWidth(window.innerWidth);
