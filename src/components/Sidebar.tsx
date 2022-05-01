@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import {
   ChangeEventHandler,
   Dispatch,
@@ -15,21 +16,39 @@ interface IUserInfo {
 }
 
 interface IFriendsList {
-  userId: string;
-  name: string;
-  email: string;
-  avatarUrl: string;
-  onlineStatus: boolean;
+  chatRoomId: string;
+  _doc: {
+    userId: string;
+    name: string;
+    email: string;
+    avatarUrl: string;
+    onlineStatus: boolean;
+  };
 }
 interface props {
   setSelectedUser: (arg: string) => void;
   setUserInfo: Dispatch<SetStateAction<IUserInfo | undefined>>;
+  classes?: string;
 }
 
-const Sidebar = ({ setSelectedUser, setUserInfo }: props) => {
-  const handleClick = (userId: string) => {
+interface handleClickProps {
+  userId: string;
+  name: string;
+  onlineStatus: string;
+  chatRoomId: string;
+}
+
+const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
+  const router = useRouter();
+  const handleClick = ({
+    userId,
+    name,
+    onlineStatus,
+    chatRoomId,
+  }: handleClickProps) => {
     setSelectedUser(userId);
-    setUserInfo({ name: "Jhon Doe", status: "online" });
+    setUserInfo({ name, status: onlineStatus });
+    return router.push("./chat/" + chatRoomId);
   };
 
   const handleChange = (arg: string) => {
@@ -38,7 +57,7 @@ const Sidebar = ({ setSelectedUser, setUserInfo }: props) => {
     }
 
     const list = friendsList?.filter((friend) => {
-      return friend.name.startsWith(arg);
+      return friend._doc.name.startsWith(arg);
     });
     setFriendsList(list);
   };
@@ -54,6 +73,7 @@ const Sidebar = ({ setSelectedUser, setUserInfo }: props) => {
   useEffect(() => {
     const fetchUsers = async () => {
       const res = await axiosInstance.get("/api/chat/getAllFriends");
+      console.log(res.data);
       setMainFriendsList(res.data);
       setFriendsList(res.data);
     };
@@ -62,7 +82,8 @@ const Sidebar = ({ setSelectedUser, setUserInfo }: props) => {
   }, []);
 
   return (
-    <div className='basis-1/3 max-w-xs bg-gray-100 h-[90vh] w-full overflow-y-auto'>
+    <div
+      className={`max-w-xs bg-gray-100 h-[90vh] w-full overflow-y-auto ${classes}`}>
       <form
         className='w-full h-12 grid place-items-center border-bottom-1'
         onSubmit={(e) => e.preventDefault()}>
@@ -81,18 +102,25 @@ const Sidebar = ({ setSelectedUser, setUserInfo }: props) => {
           friendsList.map((friend) => (
             <div
               className='flex h-20 border-b-2 space-x-4 w-11/12 mx-auto space-y-1 items-center cursor-pointer'
-              onClick={() => handleClick("232134354325346a")}
-              key={friend.userId}>
+              onClick={() =>
+                handleClick({
+                  userId: friend._doc.userId,
+                  name: friend._doc.name,
+                  onlineStatus: friend._doc.onlineStatus ? "online" : "offline",
+                  chatRoomId: friend.chatRoomId,
+                })
+              }
+              key={friend._doc.userId}>
               <div className=''>
                 <Image
-                  src={friend.avatarUrl}
+                  src={friend._doc.avatarUrl}
                   height='40px'
                   width='40px'
                   className='rounded-full bg-green-100'></Image>
               </div>
               <div>
-                <p>{friend.name}</p>
-                <p className='text-gray-500'>{friend.onlineStatus}</p>
+                <p>{friend._doc.name}</p>
+                <p className='text-gray-500'>{friend._doc.onlineStatus}</p>
               </div>
             </div>
           ))}

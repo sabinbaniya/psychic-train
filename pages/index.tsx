@@ -10,27 +10,45 @@ interface IUserInfo {
 const Home: NextPage = () => {
   const [selectedUser, setSelectedUser] = useState("");
   const [userInfo, setUserInfo] = useState<IUserInfo | undefined>(undefined);
-  // const [windowWidth, setWindowWidth] = useState(0);
+  const [windowWidth, setWindowWidth] = useState(0);
 
-  // useEffect(() => {
-  //   document.addEventListener("resize", () =>
-  //     setWindowWidth(window.innerWidth)
-  //   );
-  //   console.log(windowWidth);
-  //   return;
-  // });
+  const checkSize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    if (windowWidth === 0) {
+      setWindowWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", checkSize);
+    return () => {
+      window.removeEventListener("resize", checkSize);
+    };
+  });
 
   return (
     <>
       <Navbar userInfo={userInfo} />
       <div className='flex'>
-        {selectedUser.length > 0 ? (
-          <Chatbox selectedUser={selectedUser} />
+        {windowWidth < 640 ? (
+          selectedUser.length > 0 ? (
+            <Chatbox selectedUser={selectedUser} />
+          ) : (
+            <Sidebar
+              setSelectedUser={setSelectedUser}
+              setUserInfo={setUserInfo}
+              classes='basis-full max-w-none'
+            />
+          )
         ) : (
-          <Sidebar
-            setSelectedUser={setSelectedUser}
-            setUserInfo={setUserInfo}
-          />
+          <>
+            <Sidebar
+              setSelectedUser={setSelectedUser}
+              setUserInfo={setUserInfo}
+              classes='basis-1/3'
+            />
+            <Chatbox />
+          </>
         )}
       </div>
     </>
