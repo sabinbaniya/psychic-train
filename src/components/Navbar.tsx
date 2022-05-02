@@ -49,7 +49,7 @@ const Navbar = ({ userInfo }: props) => {
           <p className='hidden sm:block font-medium text-md'>More</p>
           <BsThreeDotsVertical />
           <div
-            className={`absolute right-4 top-14 w-36 text-center shadow-md rounded-md bg-white ${
+            className={`absolute z-50 right-4 top-14 w-36 text-center shadow-md rounded-md bg-white ${
               showSettings ? "inline-block" : "hidden"
             }`}>
             <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>

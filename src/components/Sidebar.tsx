@@ -17,7 +17,7 @@ interface IUserInfo {
 
 interface IFriendsList {
   chatRoomId: string;
-  _doc: {
+  friend: {
     userId: string;
     name: string;
     email: string;
@@ -57,7 +57,7 @@ const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
     }
 
     const list = friendsList?.filter((friend) => {
-      return friend._doc.name.startsWith(arg);
+      return friend.friend.name.startsWith(arg);
     });
     setFriendsList(list);
   };
@@ -105,23 +105,25 @@ const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
               className='flex h-20 border-b-2 space-x-4 w-11/12 mx-auto space-y-1 items-center cursor-pointer'
               onClick={() =>
                 handleClick({
-                  userId: friend._doc.userId,
-                  name: friend._doc.name,
-                  onlineStatus: friend._doc.onlineStatus ? "online" : "offline",
+                  userId: friend.friend.userId,
+                  name: friend.friend.name,
+                  onlineStatus: friend.friend.onlineStatus
+                    ? "online"
+                    : "offline",
                   chatRoomId: friend.chatRoomId,
                 })
               }
-              key={friend._doc.userId}>
+              key={friend.friend.userId}>
               <div className=''>
                 <Image
-                  src={friend._doc.avatarUrl}
+                  src={friend.friend.avatarUrl}
                   height='40px'
                   width='40px'
                   className='rounded-full bg-green-100'></Image>
               </div>
               <div>
-                <p>{friend._doc.name}</p>
-                <p className='text-gray-500'>{friend._doc.onlineStatus}</p>
+                <p>{friend.friend.name}</p>
+                <p className='text-gray-500'>{friend.friend.onlineStatus}</p>
               </div>
             </div>
           ))}

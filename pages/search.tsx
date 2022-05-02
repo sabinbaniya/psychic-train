@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { SyntheticEvent, useState } from "react";
+import { useForm } from "react-hook-form";
 import axiosInstance from "../axios/axiosInstance";
 import { Navbar } from "../src/components";
 
@@ -12,10 +13,18 @@ interface ISearchList {
 
 const search = () => {
   const [searchList, setSearchList] = useState<ISearchList | null>(null);
-  const [query, setQuery] = useState("");
-  const handleSubmit = async (e: SyntheticEvent) => {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors },
+  } = useForm({ defaultValues: { query: "" } });
+  const formSubmit = async () => {
+    console.log("first");
+    const query = watch("query");
     try {
-      e.preventDefault();
+      reset();
       const res = await axiosInstance.post(
         "/api/chat/search",
         JSON.stringify({ email: query })
@@ -47,15 +56,21 @@ const search = () => {
       <Navbar />
       <div className='h-[80vh] w-full my-8'>
         <form
-          onSubmit={handleSubmit}
-          className='flex items-center justify-between px-12'>
+          onSubmit={handleSubmit(formSubmit)}
+          className='flex relative items-center justify-between px-12'>
           <div className=' mx-auto'>
             <input
               type='text'
-              name='query'
+              {...register("query", {
+                required: "Please provide a valid email",
+                pattern: {
+                  value:
+                    /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
+                  message: "Please provide a valid email",
+                },
+              })}
               autoComplete='off'
               id='query'
-              onChange={(e) => setQuery(e.target.value)}
               className='ring-2 px-4 rounded-l-md w-96 h-9 focus:outline-0'
               placeholder='jhon@chatapp.com'
             />
@@ -65,6 +80,11 @@ const search = () => {
               className='cursor-pointer rounded-r-md px-4 py-2 bg-blue-500 text-white text-bold '
             />
           </div>
+          {errors.query && (
+            <p className='text-red-500 absolute top-10 text-sm font-bold left-1/2 -translate-x-1/2'>
+              {errors.query.message}
+            </p>
+          )}
         </form>
         <div>
           <h1 className='font-bold text-xl text-center my-8'>User</h1>
