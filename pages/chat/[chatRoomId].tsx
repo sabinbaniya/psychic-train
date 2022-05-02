@@ -4,9 +4,11 @@ import { io } from "socket.io-client";
 import axiosInstance from "../../axios/axiosInstance";
 
 interface IMessage {
-  message: string;
   author: string;
-  time: string;
+  author_name: string;
+  msg: string;
+  chatRoomId: string;
+  createdAt: string;
 }
 
 const socket = io("http://localhost:5000");
@@ -14,9 +16,15 @@ const socket = io("http://localhost:5000");
 const Chatbox = () => {
   const [loading, setLoading] = useState(false);
 
+  const [user, setUser] = useState<string | null>(null);
+
   const [messages, setMessages] = useState<IMessage[] | undefined>();
 
-  const loggedInUser = "Lucas";
+  useEffect(() => {
+    const cookie = document.cookie;
+    const userId = cookie.split("=")[1];
+    setUser(userId);
+  }, []);
 
   useEffect(() => {
     const chatRoomId = window.location.pathname.split("/")[2];
@@ -26,7 +34,8 @@ const Chatbox = () => {
         const res = await axiosInstance.get(
           "/api/chat/getAllMessages/" + chatRoomId
         );
-        console.log(res);
+        console.log(res.data.messageId[0].time);
+        setMessages(res.data.messageId);
       } catch (error) {
         console.log(error);
       }
@@ -42,7 +51,6 @@ const Chatbox = () => {
   }, []);
 
   useEffect(() => {
-    console.log("first");
     socket.on("get_message", (data) => {
       console.log(data);
     });
@@ -58,6 +66,7 @@ const Chatbox = () => {
     const messageObj = {
       msg,
       chatRoomId,
+      author: user,
     };
 
     socket.emit("send_message", messageObj);
@@ -73,28 +82,28 @@ const Chatbox = () => {
               <div
                 key={Math.random()}
                 className={`w-11/12 mx-auto my-4  ${
-                  message.author === loggedInUser ? "text-right" : "text-left"
+                  message.author === user ? "text-right" : "text-left"
                 }`}>
                 <p
                   className={`text-sm text-gray-500 px-2 ${
-                    message.author === loggedInUser ? "hidden" : "block"
+                    message.author === user ? "hidden" : "block"
                   }`}>
-                  {message.author}
+                  {message.author_name}
                 </p>
                 <p
                   className={` px-4 py-2 text-center rounded-full inline-block ${
-                    message.author === loggedInUser
+                    message.author === user
                       ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
                       : "bg-gradient-to-tl from-gray-700 to-black text-white"
                   }`}>
-                  {message.message}
+                  {message.msg}
                 </p>
                 <p className={`text-gray-500 text-xs px-2 pt-2`}>
-                  {message.time.split(",")[0] ===
-                  new Date().toLocaleString().split(",")[0]
-                    ? message.time.split(",")[1]
-                    : message.time}
-                  <br />
+                  {new Date(message.createdAt)
+                    .toLocaleString()
+                    .split(",")[0] === new Date().toLocaleString().split(",")[0]
+                    ? new Date(message.createdAt).toLocaleString().split(" ")[1]
+                    : new Date(message.createdAt).toLocaleString()}
                 </p>
               </div>
             );
