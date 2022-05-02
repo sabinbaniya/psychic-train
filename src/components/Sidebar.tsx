@@ -71,18 +71,20 @@ const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
   >(undefined);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const res = await axiosInstance.get("/api/chat/getAllFriends");
-      setMainFriendsList(res.data);
-      setFriendsList(res.data);
-    };
-
-    fetchUsers();
+    try {
+      const fetchUsers = async () => {
+        const res = await axiosInstance.get("/api/chat/getAllFriends");
+        setMainFriendsList(res.data);
+        setFriendsList(res.data);
+      };
+      fetchUsers();
+    } catch (error) {
+      console.log(error);
+    }
   }, []);
 
   return (
-    <div
-      className={`max-w-xs bg-gray-100 h-[90vh] w-full overflow-y-auto ${classes}`}>
+    <div className={`bg-gray-100 h-[90vh] w-full overflow-y-auto ${classes}`}>
       <form
         className='w-full h-12 grid place-items-center border-bottom-1'
         onSubmit={(e) => e.preventDefault()}>

@@ -40,7 +40,7 @@ const Navbar = ({ userInfo }: props) => {
               <p className='font-light text-gray-500'>{userInfo.status}</p>
             </>
           ) : (
-            <p>Start Messaging</p>
+            <Link href={"/"}>Start Messaging</Link>
           )}
         </div>
         <div
@@ -58,6 +58,11 @@ const Navbar = ({ userInfo }: props) => {
             <Link href='/search'>
               <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
                 search people
+              </a>
+            </Link>
+            <Link href='/'>
+              <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
+                start chatting
               </a>
             </Link>
             <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1'>

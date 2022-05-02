@@ -1,5 +1,5 @@
-import { useRouter } from "next/router";
-import { FormEvent, SyntheticEvent, useEffect, useState } from "react";
+import Head from "next/head";
+import { FormEvent, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import axiosInstance from "../../axios/axiosInstance";
 
@@ -14,7 +14,7 @@ interface IMessage {
 const socket = io("http://localhost:5000");
 
 const Chatbox = () => {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const [user, setUser] = useState<string | null>(null);
 
@@ -28,7 +28,6 @@ const Chatbox = () => {
 
   useEffect(() => {
     const chatRoomId = window.location.pathname.split("/")[2];
-
     const getMessages = async () => {
       try {
         const res = await axiosInstance.get(
@@ -36,6 +35,7 @@ const Chatbox = () => {
         );
         console.log(res.data.messageId[0].time);
         setMessages(res.data.messageId);
+        setLoading(false);
       } catch (error) {
         console.log(error);
       }
@@ -73,8 +73,15 @@ const Chatbox = () => {
     (document.getElementById("msg") as HTMLFormElement).value = "";
   };
 
+  if (loading) {
+    return <>loading</>;
+  }
+
   return (
     <div className='bg-gray-300 h-[90vh] w-full overflow-y-auto'>
+      <Head>
+        <title>Chat</title>
+      </Head>
       <div className='h-[84vh] overflow-y-auto'>
         {messages ? (
           messages.map((message) => {
@@ -88,7 +95,7 @@ const Chatbox = () => {
                   className={`text-sm text-gray-500 px-2 ${
                     message.author === user ? "hidden" : "block"
                   }`}>
-                  {message.author_name}
+                  {JSON.stringify(message)}
                 </p>
                 <p
                   className={` px-4 py-2 text-center rounded-full inline-block ${
