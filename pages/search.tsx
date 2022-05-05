@@ -1,8 +1,7 @@
 import Image from "next/image";
-import { SyntheticEvent, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../axios/axiosInstance";
-import { Navbar } from "../src/components";
 
 interface ISearchList {
   name: string;
@@ -53,7 +52,6 @@ const search = () => {
 
   return (
     <>
-      <Navbar />
       <div className='h-[80vh] w-full my-8'>
         <form
           onSubmit={handleSubmit(formSubmit)}

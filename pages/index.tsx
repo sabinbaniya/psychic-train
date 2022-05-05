@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useEffect, useState } from "react";
-import { Chatbox, Navbar, Sidebar } from "../src/components";
+import { Chatbox, Sidebar } from "../src/components";
 
 interface IUserInfo {
   name: string;
@@ -28,7 +28,6 @@ const Home: NextPage = () => {
 
   return (
     <>
-      <Navbar userInfo={userInfo} />
       <div className='flex'>
         {windowWidth < 640 ? (
           selectedUser.length > 0 ? (

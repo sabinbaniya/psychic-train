@@ -3,8 +3,6 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { BiMessageDetail } from "react-icons/bi";
 import axiosInstance from "../axios/axiosInstance";
-import { Navbar } from "../src/components";
-
 interface IUserInfo {
   avatarUrl: string;
   createdAt: string;
@@ -38,7 +36,6 @@ const profile = () => {
   }, []);
   return (
     <>
-      <Navbar />
       <h1 className='text-center text-2xl text-gray-600 my-4 font-bold'>
         Profile
       </h1>

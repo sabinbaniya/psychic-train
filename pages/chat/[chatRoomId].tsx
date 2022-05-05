@@ -28,16 +28,34 @@ const socket = io("http://localhost:5000");
 
 const Chatbox = () => {
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   const [user, setUser] = useState<IUser | null>(null);
   const [skip, setSkip] = useState(0);
-  const [messagesRemaining, setMessagesRemaining] = useState<number>(1);
+  const [messagesRemaining, setMessagesRemaining] = useState<boolean>(false);
 
   const [messages, setMessages] = useState<IMessage[]>([
     { author: "", author_name: "", msg: "", chatRoomId: "", createdAt: "" },
   ]);
 
-  const observer = useRef();
+  const observer = useRef<IntersectionObserver>();
+  const firstMessageRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (loading) return;
+      if (observer.current) {
+        observer.current.disconnect();
+      }
+
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && messagesRemaining) {
+          setSkip((prev) => prev + 1);
+        }
+      });
+
+      if (node) observer.current.observe(node);
+    },
+    [loading, messagesRemaining]
+  );
 
   useEffect(() => {
     const { uid, uname } = parse(document.cookie);
@@ -49,12 +67,15 @@ const Chatbox = () => {
 
   useEffect(() => {
     const chatRoomId = window.location.pathname.split("/")[2];
-    // if (messagesRemaining <= 0) return;
+    setLoading(true);
     const getMessages = async () => {
       try {
         const res = await axiosInstance.get(
           `/api/chat/getAllMessages/${chatRoomId}?skip=${skip}`
         );
+
+        setMessagesRemaining(res.data.messages.messageId.length !== 0);
+
         if (messages[0].author !== "") {
           return setMessages((messages) => [
             ...res.data.messages.messageId.reverse(),
@@ -62,18 +83,17 @@ const Chatbox = () => {
           ]);
         }
 
-        console.log(res.data);
-        setMessagesRemaining(res.data.noOfMessages);
         return setMessages(res.data.messages.messageId.reverse());
       } catch (error) {
         console.log(error);
+        setError(true);
       } finally {
         setLoading(false);
       }
     };
 
     getMessages();
-  }, []);
+  }, [skip]);
 
   useEffect(() => {
     const chatRoomId = window.location.pathname.split("/")[2];
@@ -127,10 +147,6 @@ const Chatbox = () => {
     (document.getElementById("msg") as HTMLFormElement).value = "";
   };
 
-  if (loading) {
-    return <>loading</>;
-  }
-
   return (
     <div className='bg-gray-300 h-[90vh] w-full overflow-y-auto'>
       <Head>
@@ -139,41 +155,41 @@ const Chatbox = () => {
       <div className='h-[84vh] overflow-y-scroll' id='chatbox'>
         {messages[0]?.author !== "" ? (
           messages.map((message, index) => {
-            // if (index === 0) {
-            //   return (
-            //     <div
-            //       key={Math.random()}
-            //       ref={firstMessageRef}
-            //       className={`w-11/12 mx-auto my-4  ${
-            //         message.author === user?.uid ? "text-right" : "text-left"
-            //       }`}>
-            //       <p
-            //         className={`text-sm text-gray-500 px-2 ${
-            //           message.author === user?.uid ? "hidden" : "block"
-            //         }`}>
-            //         {message.author_name}
-            //       </p>
-            //       <p
-            //         className={` px-4 py-2 text-center rounded-full inline-block ${
-            //           message.author === user?.uid
-            //             ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
-            //             : "bg-gradient-to-tl from-gray-700 to-black text-white"
-            //         }`}>
-            //         {message.msg}
-            //       </p>
-            //       <p className={`text-gray-500 text-xs px-2 pt-2`}>
-            //         {new Date(message.createdAt)
-            //           .toLocaleString()
-            //           .split(",")[0] ===
-            //         new Date().toLocaleString().split(",")[0]
-            //           ? new Date(message.createdAt)
-            //               .toLocaleString()
-            //               .split(" ")[1]
-            //           : new Date(message.createdAt).toLocaleString()}
-            //       </p>
-            //     </div>
-            //   );
-            // }
+            if (index === 0) {
+              return (
+                <div
+                  key={Math.random()}
+                  ref={firstMessageRef}
+                  className={`w-11/12 mx-auto my-4  ${
+                    message.author === user?.uid ? "text-right" : "text-left"
+                  }`}>
+                  <p
+                    className={`text-sm text-gray-500 px-2 ${
+                      message.author === user?.uid ? "hidden" : "block"
+                    }`}>
+                    {message.author_name}
+                  </p>
+                  <p
+                    className={` px-4 py-2 text-center rounded-full inline-block ${
+                      message.author === user?.uid
+                        ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
+                        : "bg-gradient-to-tl from-gray-700 to-black text-white"
+                    }`}>
+                    {message.msg}
+                  </p>
+                  <p className={`text-gray-500 text-xs px-2 pt-2`}>
+                    {new Date(message.createdAt)
+                      .toLocaleString()
+                      .split(",")[0] ===
+                    new Date().toLocaleString().split(",")[0]
+                      ? new Date(message.createdAt)
+                          .toLocaleString()
+                          .split(" ")[1]
+                      : new Date(message.createdAt).toLocaleString()}
+                  </p>
+                </div>
+              );
+            }
 
             return (
               <div
