@@ -26,8 +26,8 @@ interface IFriendsList {
   };
 }
 interface props {
-  setSelectedUser: (arg: string) => void;
-  setUserInfo: Dispatch<SetStateAction<IUserInfo | undefined>>;
+  setSelectedUser?: (arg: string) => void;
+  setUserInfo?: Dispatch<SetStateAction<IUserInfo | undefined>>;
   classes?: string;
 }
 
@@ -46,8 +46,8 @@ const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
     onlineStatus,
     chatRoomId,
   }: handleClickProps) => {
-    setSelectedUser(userId);
-    setUserInfo({ name, status: onlineStatus });
+    // setSelectedUser(userId);
+    // setUserInfo({ name, status: onlineStatus });
     return router.push("./chat/" + chatRoomId);
   };
 

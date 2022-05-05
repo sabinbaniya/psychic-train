@@ -1,8 +1,8 @@
 import Head from "next/head";
 import {
   FormEvent,
-  MutableRefObject,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState,
@@ -10,6 +10,8 @@ import {
 import { io } from "socket.io-client";
 import axiosInstance from "../../axios/axiosInstance";
 import { parse } from "cookie";
+import { Sidebar } from "../../src/components";
+import { SelectedUserContext } from "../../context/SelectedUserContext";
 
 interface IMessage {
   author: string;
@@ -147,101 +149,245 @@ const Chatbox = () => {
     (document.getElementById("msg") as HTMLFormElement).value = "";
   };
 
+  // to be removed to global context
+  interface IUserInfo {
+    name: string;
+    status: string;
+  }
+
+  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
+  const [userInfo, setUserInfo] = useState<IUserInfo | undefined>(undefined);
+  const [windowWidth, setWindowWidth] = useState(0);
+
+  const checkSize = () => {
+    setWindowWidth(window.innerWidth);
+  };
+
+  useEffect(() => {
+    if (windowWidth === 0) {
+      setWindowWidth(window.innerWidth);
+    }
+    window.addEventListener("resize", checkSize);
+    return () => {
+      window.removeEventListener("resize", checkSize);
+    };
+  });
+
   return (
     <div className='bg-gray-300 h-[90vh] w-full overflow-y-auto'>
       <Head>
         <title>Chat</title>
       </Head>
-      <div className='h-[84vh] overflow-y-scroll' id='chatbox'>
-        {messages[0]?.author !== "" ? (
-          messages.map((message, index) => {
-            if (index === 0) {
-              return (
-                <div
-                  key={Math.random()}
-                  ref={firstMessageRef}
-                  className={`w-11/12 mx-auto my-4  ${
-                    message.author === user?.uid ? "text-right" : "text-left"
-                  }`}>
-                  <p
-                    className={`text-sm text-gray-500 px-2 ${
-                      message.author === user?.uid ? "hidden" : "block"
-                    }`}>
-                    {message.author_name}
-                  </p>
-                  <p
-                    className={` px-4 py-2 text-center rounded-full inline-block ${
-                      message.author === user?.uid
-                        ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
-                        : "bg-gradient-to-tl from-gray-700 to-black text-white"
-                    }`}>
-                    {message.msg}
-                  </p>
-                  <p className={`text-gray-500 text-xs px-2 pt-2`}>
-                    {new Date(message.createdAt)
-                      .toLocaleString()
-                      .split(",")[0] ===
-                    new Date().toLocaleString().split(",")[0]
-                      ? new Date(message.createdAt)
-                          .toLocaleString()
-                          .split(" ")[1]
-                      : new Date(message.createdAt).toLocaleString()}
-                  </p>
-                </div>
-              );
-            }
+      <div className='flex'>
+        {windowWidth < 640 ? (
+          selectedUser.length > 0 ? (
+            <>
+              <div className='h-[84vh] overflow-y-scroll' id='chatbox'>
+                {messages[0]?.author !== "" ? (
+                  messages.map((message, index) => {
+                    if (index === 0) {
+                      return (
+                        <div
+                          key={Math.random()}
+                          ref={firstMessageRef}
+                          className={`w-11/12 mx-auto my-4  ${
+                            message.author === user?.uid
+                              ? "text-right"
+                              : "text-left"
+                          }`}>
+                          <p
+                            className={`text-sm text-gray-500 px-2 ${
+                              message.author === user?.uid ? "hidden" : "block"
+                            }`}>
+                            {message.author_name}
+                          </p>
+                          <p
+                            className={` px-4 py-2 text-center rounded-full inline-block ${
+                              message.author === user?.uid
+                                ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
+                                : "bg-gradient-to-tl from-gray-700 to-black text-white"
+                            }`}>
+                            {message.msg}
+                          </p>
+                          <p className={`text-gray-500 text-xs px-2 pt-2`}>
+                            {new Date(message.createdAt)
+                              .toLocaleString()
+                              .split(",")[0] ===
+                            new Date().toLocaleString().split(",")[0]
+                              ? new Date(message.createdAt)
+                                  .toLocaleString()
+                                  .split(" ")[1]
+                              : new Date(message.createdAt).toLocaleString()}
+                          </p>
+                        </div>
+                      );
+                    }
 
-            return (
-              <div
-                key={Math.random()}
-                className={`w-11/12 mx-auto my-4  ${
-                  message.author === user?.uid ? "text-right" : "text-left"
-                }`}>
-                <p
-                  className={`text-sm text-gray-500 px-2 ${
-                    message.author === user?.uid ? "hidden" : "block"
-                  }`}>
-                  {message.author_name}
-                </p>
-                <p
-                  className={` px-4 py-2 text-center rounded-full inline-block ${
-                    message.author === user?.uid
-                      ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
-                      : "bg-gradient-to-tl from-gray-700 to-black text-white"
-                  }`}>
-                  {message.msg}
-                </p>
-                <p className={`text-gray-500 text-xs px-2 pt-2`}>
-                  {new Date(message.createdAt)
-                    .toLocaleString()
-                    .split(",")[0] === new Date().toLocaleString().split(",")[0]
-                    ? new Date(message.createdAt).toLocaleString().split(" ")[1]
-                    : new Date(message.createdAt).toLocaleString()}
-                </p>
+                    return (
+                      <div
+                        key={Math.random()}
+                        className={`w-11/12 mx-auto my-4  ${
+                          message.author === user?.uid
+                            ? "text-right"
+                            : "text-left"
+                        }`}>
+                        <p
+                          className={`text-sm text-gray-500 px-2 ${
+                            message.author === user?.uid ? "hidden" : "block"
+                          }`}>
+                          {message.author_name}
+                        </p>
+                        <p
+                          className={` px-4 py-2 text-center rounded-full inline-block ${
+                            message.author === user?.uid
+                              ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
+                              : "bg-gradient-to-tl from-gray-700 to-black text-white"
+                          }`}>
+                          {message.msg}
+                        </p>
+                        <p className={`text-gray-500 text-xs px-2 pt-2`}>
+                          {new Date(message.createdAt)
+                            .toLocaleString()
+                            .split(",")[0] ===
+                          new Date().toLocaleString().split(",")[0]
+                            ? new Date(message.createdAt)
+                                .toLocaleString()
+                                .split(" ")[1]
+                            : new Date(message.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className='text-center pt-[75vh] text-gray-600 font-light text-lg'>
+                    No conversations yet.
+                  </p>
+                )}
               </div>
-            );
-          })
+              <form className='h-[6vh] flex' onSubmit={handleSubmit}>
+                <input
+                  type='text'
+                  name='text'
+                  id='msg'
+                  className='w-full px-4 border-0 outline-none'
+                  autoComplete='off'
+                  placeholder='Start typing...'
+                />
+                <input
+                  type='submit'
+                  value='>'
+                  className='w-20 cursor-pointer bg-black text-white font-bold'
+                />
+              </form>
+            </>
+          ) : (
+            <Sidebar classes='basis-full max-w-none' />
+          )
         ) : (
-          <p className='text-center pt-[75vh] text-gray-600 font-light text-lg'>
-            No conversations yet.
-          </p>
+          <>
+            <Sidebar classes='basis-1/3' />
+            <>
+              <div className='h-[84vh] overflow-y-scroll' id='chatbox'>
+                {messages[0]?.author !== "" ? (
+                  messages.map((message, index) => {
+                    if (index === 0) {
+                      return (
+                        <div
+                          key={Math.random()}
+                          ref={firstMessageRef}
+                          className={`w-11/12 mx-auto my-4  ${
+                            message.author === user?.uid
+                              ? "text-right"
+                              : "text-left"
+                          }`}>
+                          <p
+                            className={`text-sm text-gray-500 px-2 ${
+                              message.author === user?.uid ? "hidden" : "block"
+                            }`}>
+                            {message.author_name}
+                          </p>
+                          <p
+                            className={` px-4 py-2 text-center rounded-full inline-block ${
+                              message.author === user?.uid
+                                ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
+                                : "bg-gradient-to-tl from-gray-700 to-black text-white"
+                            }`}>
+                            {message.msg}
+                          </p>
+                          <p className={`text-gray-500 text-xs px-2 pt-2`}>
+                            {new Date(message.createdAt)
+                              .toLocaleString()
+                              .split(",")[0] ===
+                            new Date().toLocaleString().split(",")[0]
+                              ? new Date(message.createdAt)
+                                  .toLocaleString()
+                                  .split(" ")[1]
+                              : new Date(message.createdAt).toLocaleString()}
+                          </p>
+                        </div>
+                      );
+                    }
+
+                    return (
+                      <div
+                        key={Math.random()}
+                        className={`w-11/12 mx-auto my-4  ${
+                          message.author === user?.uid
+                            ? "text-right"
+                            : "text-left"
+                        }`}>
+                        <p
+                          className={`text-sm text-gray-500 px-2 ${
+                            message.author === user?.uid ? "hidden" : "block"
+                          }`}>
+                          {message.author_name}
+                        </p>
+                        <p
+                          className={` px-4 py-2 text-center rounded-full inline-block ${
+                            message.author === user?.uid
+                              ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
+                              : "bg-gradient-to-tl from-gray-700 to-black text-white"
+                          }`}>
+                          {message.msg}
+                        </p>
+                        <p className={`text-gray-500 text-xs px-2 pt-2`}>
+                          {new Date(message.createdAt)
+                            .toLocaleString()
+                            .split(",")[0] ===
+                          new Date().toLocaleString().split(",")[0]
+                            ? new Date(message.createdAt)
+                                .toLocaleString()
+                                .split(" ")[1]
+                            : new Date(message.createdAt).toLocaleString()}
+                        </p>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className='text-center pt-[75vh] text-gray-600 font-light text-lg'>
+                    No conversations yet.
+                  </p>
+                )}
+              </div>
+              <form className='h-[6vh] flex' onSubmit={handleSubmit}>
+                <input
+                  type='text'
+                  name='text'
+                  id='msg'
+                  className='w-full px-4 border-0 outline-none'
+                  autoComplete='off'
+                  placeholder='Start typing...'
+                />
+                <input
+                  type='submit'
+                  value='>'
+                  className='w-20 cursor-pointer bg-black text-white font-bold'
+                />
+              </form>
+            </>
+          </>
         )}
       </div>
-      <form className='h-[6vh] flex' onSubmit={handleSubmit}>
-        <input
-          type='text'
-          name='text'
-          id='msg'
-          className='w-full px-4 border-0 outline-none'
-          autoComplete='off'
-          placeholder='Start typing...'
-        />
-        <input
-          type='submit'
-          value='>'
-          className='w-20 cursor-pointer bg-black text-white font-bold'
-        />
-      </form>
     </div>
   );
 };

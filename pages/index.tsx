@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Chatbox, Sidebar } from "../src/components";
 
@@ -28,6 +29,9 @@ const Home: NextPage = () => {
 
   return (
     <>
+      <Head>
+        <title>Chat | Start Messaging</title>
+      </Head>
       <div className='flex'>
         {windowWidth < 640 ? (
           selectedUser.length > 0 ? (
