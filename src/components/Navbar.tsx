@@ -18,6 +18,8 @@ const Navbar = ({ userInfo }: props) => {
 
   const handleLogout = async () => {
     try {
+      document.cookie = "uname=null; expires=-1; path=/";
+      document.cookie = "uid=null; expires=-1; path=/";
       await axiosInstance.get("/api/auth/logout");
       router.push("/login");
     } catch (error) {
@@ -52,9 +54,12 @@ const Navbar = ({ userInfo }: props) => {
             className={`absolute z-50 right-4 top-14 w-36 text-center shadow-md rounded-md bg-white ${
               showSettings ? "inline-block" : "hidden"
             }`}>
-            <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
-              profile
-            </a>
+            <Link href='/profile'>
+              <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
+                profile
+              </a>
+            </Link>
+
             <Link href='/search'>
               <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1 mt-2'>
                 search people

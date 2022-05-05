@@ -9,8 +9,8 @@ const middleware = (req: NextRequest) => {
     const { userId, name } = jwt.decode(access) as JwtPayload;
 
     if (!userInfo) {
-      res.cookie("uid", userId);
-      res.cookie("uname", name);
+      res.cookie("uid", userId, { maxAge: 60 * 60 * 24 * 30 });
+      res.cookie("uname", name, { maxAge: 60 * 60 * 24 * 30 });
     }
 
     return res;

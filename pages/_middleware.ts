@@ -15,6 +15,10 @@ const middleware = async (req: NextRequest) => {
       return NextResponse.redirect(new URL("/login", url));
     }
 
+    if (url.pathname.startsWith("/profile")) {
+      return NextResponse.redirect(new URL("/login", url));
+    }
+
     return NextResponse.next();
   } else {
     try {
@@ -31,6 +35,10 @@ const middleware = async (req: NextRequest) => {
       }
 
       if (url.pathname.startsWith("/chat")) {
+        return NextResponse.redirect(new URL("/login", url));
+      }
+
+      if (url.pathname.startsWith("/profile")) {
         return NextResponse.redirect(new URL("/login", url));
       }
 

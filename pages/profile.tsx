@@ -1,0 +1,112 @@
+import Image from "next/image";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { BiMessageDetail } from "react-icons/bi";
+import axiosInstance from "../axios/axiosInstance";
+import { Navbar } from "../src/components";
+
+interface IUserInfo {
+  avatarUrl: string;
+  createdAt: string;
+  email: string;
+  friends: [
+    {
+      avatarUrl: string;
+      email: string;
+      joinedAt: string;
+      name: string;
+      chatRoomId: string;
+      messageCollectionId: string;
+      userId: string;
+      _id: string;
+    }
+  ];
+  isEmailVerified: boolean;
+  name: string;
+  onlineStatus: boolean;
+  _id: string;
+}
+
+const profile = () => {
+  const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
+  useEffect(() => {
+    const fetcher = async () => {
+      const res = await axiosInstance.get("/api/user/getProfileInfo");
+      setUserInfo(res.data);
+    };
+    fetcher();
+  }, []);
+  return (
+    <>
+      <Navbar />
+      <h1 className='text-center text-2xl text-gray-600 my-4 font-bold'>
+        Profile
+      </h1>
+      <div>
+        {userInfo && (
+          <>
+            <div className='shadow-md max-w-4xl flex items-center justify-between mx-auto rounded-md overflow-hidden p-8'>
+              <div>
+                <Image
+                  src={userInfo.avatarUrl}
+                  height='100%'
+                  width='100%'></Image>
+              </div>
+              <div className='text-gray-600'>
+                <p>Name: {userInfo.name}</p>
+                <p>Email: {userInfo.email}</p>
+                <p>
+                  Verified Email:{" "}
+                  {userInfo.isEmailVerified ? "verified" : "not verified"}
+                </p>
+                <p>
+                  {" "}
+                  Online Status: {userInfo.onlineStatus ? "online" : "offline"}
+                </p>
+                <p>
+                  Joined Date:{" "}
+                  {new Date(userInfo.createdAt).toLocaleDateString()}
+                </p>
+              </div>
+            </div>
+
+            <p className='text-center text-xl font-bold my-4'>Friends</p>
+            <div className='flex items-center justify-around'>
+              <div>
+                {userInfo.friends.map((friend) => {
+                  return (
+                    <div
+                      key={friend._id}
+                      className='bg-gray-50 shadow-sm text-center w-max mx-auto p-4 rounded-lg'>
+                      <div>
+                        <Image
+                          src={friend.avatarUrl}
+                          className='rounded-full'
+                          height='50'
+                          width='50'></Image>
+                        <p>Name: {friend.name}</p>
+                        <p>Email: {friend.email}</p>
+                        <p>
+                          Joined Date:{" "}
+                          {new Date(friend.joinedAt).toDateString()}
+                        </p>
+                        <Link href={`/chat/${friend.chatRoomId}`}>
+                          <p className='bg-blue-400 cursor-pointer flex justify-between items-center px-8 py-2 my-4 text-white font-bold text-lg rounded-full'>
+                            <span>Chat Now</span>
+                            <BiMessageDetail />
+                          </p>
+                        </Link>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+    </>
+  );
+};
+
+export default profile;
