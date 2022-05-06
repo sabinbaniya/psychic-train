@@ -28,7 +28,14 @@ const Navbar = ({ userInfo }: props) => {
   };
 
   return (
-    <nav className='shadow-sm h-[10vh] w-screen relative'>
+    <nav
+      className='shadow-sm h-[10vh] w-screen relative'
+      style={{ userSelect: "none" }}>
+      <div
+        className={`${
+          showSettings ? "w-screen h-screen" : "w-0 h-0"
+        } absolute top-0 left-0 z-40`}
+        onClick={() => setShowSettings(false)}></div>
       <div className='w-11/12 mx-auto flex justify-between items-center h-full'>
         <Image
           src='/avatar.png'
@@ -46,7 +53,7 @@ const Navbar = ({ userInfo }: props) => {
           )}
         </div>
         <div
-          className='flex justify-between items-center space-x-2 cursor-pointer relative'
+          className='flex justify-between items-center space-x-2  relative'
           onClick={() => setShowSettings((prev) => !prev)}>
           <p className='hidden sm:block font-medium text-md'>More</p>
           <BsThreeDotsVertical />
@@ -70,10 +77,10 @@ const Navbar = ({ userInfo }: props) => {
                 start chatting
               </a>
             </Link>
-            <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1'>
+            <a className='text-gray-400 block cursor-not-allowed px-4 py-1'>
               options
             </a>
-            <a className='hover:bg-gray-200 block cursor-pointer px-4 py-1'>
+            <a className='text-gray-400 block cursor-not-allowed px-4 py-1'>
               more settings
             </a>
             <a
