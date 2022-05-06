@@ -1,14 +1,15 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
 import {
-  ChangeEventHandler,
   Dispatch,
   SetStateAction,
-  SyntheticEvent,
+  useContext,
   useEffect,
   useState,
 } from "react";
 import axiosInstance from "../../axios/axiosInstance";
+import { SelectedUserContext } from "../../context/SelectedUserContext";
+import { UserInfoContext } from "../../context/UserInfoContext";
 
 interface IUserInfo {
   name: string;
@@ -26,7 +27,6 @@ interface IFriendsList {
   };
 }
 interface props {
-  setSelectedUser?: (arg: string) => void;
   setUserInfo?: Dispatch<SetStateAction<IUserInfo | undefined>>;
   classes?: string;
 }
@@ -38,7 +38,10 @@ interface handleClickProps {
   chatRoomId: string;
 }
 
-const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
+const Sidebar = ({ classes }: props) => {
+  const { setSelectedUser } = useContext(SelectedUserContext);
+  const { setUserInfo } = useContext(UserInfoContext);
+
   const router = useRouter();
   const handleClick = ({
     userId,
@@ -46,9 +49,9 @@ const Sidebar = ({ setSelectedUser, setUserInfo, classes }: props) => {
     onlineStatus,
     chatRoomId,
   }: handleClickProps) => {
-    // setSelectedUser(userId);
-    // setUserInfo({ name, status: onlineStatus });
-    return router.push("./chat/" + chatRoomId);
+    setSelectedUser(userId);
+    setUserInfo({ name, status: onlineStatus });
+    return router.push("http://localhost:3000/chat/" + chatRoomId);
   };
 
   const handleChange = (arg: string) => {
