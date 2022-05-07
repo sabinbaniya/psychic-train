@@ -5,6 +5,7 @@ import SelectedUserProvider from "../context/SelectedUserContext";
 import UserInfoProvider from "../context/UserInfoContext";
 import FriendListContextProvider from "../context/FriendListContext";
 import { useRouter } from "next/router";
+import NextNProgress from "nextjs-progressbar";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -12,6 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   if (router.asPath === "/signup" || router.asPath === "/login") {
     return (
       <>
+        <NextNProgress color='#3b83f6' />
         <Component {...pageProps} />
       </>
     );
@@ -19,6 +21,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <NextNProgress color='#3b83f6' />
       <Layout>
         <SelectedUserProvider>
           <UserInfoProvider>

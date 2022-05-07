@@ -42,7 +42,7 @@ const profile = () => {
       <Head>
         <title>Profile | Chat App</title>
       </Head>
-      <h1 className='text-center text-2xl text-gray-600 my-4 font-bold'>
+      <h1 className='text-center text-2xl bg-blue-500 text-gray-600 my-4 font-bold'>
         Profile
       </h1>
       <div>

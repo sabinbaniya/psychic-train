@@ -39,6 +39,7 @@ const login = () => {
         "/api/auth/login",
         JSON.stringify(data)
       );
+      console.log(res);
 
       if (res.status === 200) {
         return router.push("/");
