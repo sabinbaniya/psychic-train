@@ -56,9 +56,9 @@ const Sidebar = ({ classes }: props) => {
   };
 
   const handleChange = (arg: string) => {
-    // if (arg === "") {
-    //   return setFriendsList(mainFriendsList);
-    // }
+    if (arg === "") {
+      return setFriendsList(mainFriendsList);
+    }
 
     const list = friendsList?.filter((friend) => {
       return friend.friend.name.startsWith(arg);
@@ -68,15 +68,14 @@ const Sidebar = ({ classes }: props) => {
 
   const { friendsList, setFriendsList } = useContext(friendListContext);
 
-  // const [mainFriendsList, setMainFriendsList] = useState<
-  //   IFriendsList[] | undefined
-  // >(undefined);
+  const [mainFriendsList, setMainFriendsList] =
+    useState<IFriendsList[]>(friendsList);
 
   useEffect(() => {
     try {
       const fetchUsers = async () => {
         const res = await axiosInstance.get("/api/chat/getAllFriends");
-        // setMainFriendsList(res.data);
+        setMainFriendsList(res.data);
         setFriendsList(res.data);
       };
       fetchUsers();
@@ -84,8 +83,6 @@ const Sidebar = ({ classes }: props) => {
       console.log(error);
     }
   }, []);
-
-  console.log(friendsList);
 
   return (
     <div className={`bg-gray-100 h-[90vh] w-full overflow-y-auto ${classes}`}>
@@ -103,7 +100,7 @@ const Sidebar = ({ classes }: props) => {
         />
       </form>
       <div>
-        {friendsList &&
+        {friendsList[0].chatRoomId !== "" &&
           friendsList.map((friend) => (
             <div
               className='flex h-20 border-b-2 space-x-4 w-11/12 mx-auto space-y-1 items-center cursor-pointer'

@@ -53,7 +53,7 @@ const Navbar = ({ userInfo }: props) => {
           )}
         </div>
         <div
-          className='flex justify-between items-center space-x-2  relative'
+          className='flex justify-between items-center space-x-2 cursor-pointer relative'
           onClick={() => setShowSettings((prev) => !prev)}>
           <p className='hidden sm:block font-medium text-md'>More</p>
           <BsThreeDotsVertical />

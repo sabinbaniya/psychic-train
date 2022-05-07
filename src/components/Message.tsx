@@ -1,4 +1,5 @@
 import { LegacyRef } from "react";
+import TextMessage from "./TextMessage";
 
 interface props {
   author: string;
@@ -20,6 +21,12 @@ const Message = ({
   firstMessageRef,
   user,
 }: props) => {
+  const textMessageProps = {
+    msg,
+    author,
+    user,
+  };
+
   return (
     <div
       key={Math.random()}
@@ -33,14 +40,8 @@ const Message = ({
         }`}>
         {author_name}
       </p>
-      <p
-        className={` px-4 py-2 text-center rounded-full inline-block ${
-          author === user?.uid
-            ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
-            : "bg-gradient-to-tl from-gray-700 to-black text-white"
-        }`}>
-        {msg}
-      </p>
+      <TextMessage {...textMessageProps} />
+
       <p className={`text-gray-500 text-xs px-2 pt-2`}>
         {new Date(createdAt).toLocaleString().split(",")[0] ===
         new Date().toLocaleString().split(",")[0]
