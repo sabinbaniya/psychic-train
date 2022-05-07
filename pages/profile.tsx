@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -29,13 +30,18 @@ const profile = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
   useEffect(() => {
     const fetcher = async () => {
-      const res = await axiosInstance.get("/api/user/getProfileInfo");
-      setUserInfo(res.data);
+      try {
+        const res = await axiosInstance.get("/api/user/getProfileInfo");
+        setUserInfo(res.data);
+      } catch (error) {}
     };
     fetcher();
   }, []);
   return (
     <>
+      <Head>
+        <title>Profile | Chat App</title>
+      </Head>
       <h1 className='text-center text-2xl text-gray-600 my-4 font-bold'>
         Profile
       </h1>

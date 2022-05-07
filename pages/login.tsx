@@ -24,6 +24,7 @@ const login = () => {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [errorFromServer, setErrorFromServer] = useState("");
 
   const submit = async () => {
     const data = {
@@ -42,7 +43,11 @@ const login = () => {
       if (res.status === 200) {
         return router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      setErrorFromServer(
+        "Network Error! Please try again later or contact support"
+      );
+    }
   };
 
   return (
@@ -122,6 +127,9 @@ const login = () => {
                 <p className='form_error'>{errors.password.message}</p>
               )}
             </div>
+            <span className='text-red-400 text-md font-bold'>
+              {errorFromServer.length !== 0 && errorFromServer}
+            </span>
             <div className='grid place-items-center'>
               <input
                 type='submit'

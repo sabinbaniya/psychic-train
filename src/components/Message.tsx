@@ -29,7 +29,7 @@ const Message = ({
 
   return (
     <div
-      key={Math.random()}
+      key={createdAt}
       ref={firstMessageRef}
       className={`w-11/12 mx-auto my-4  ${
         author === user?.uid ? "text-right" : "text-left"

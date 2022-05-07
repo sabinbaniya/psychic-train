@@ -1,3 +1,4 @@
+import Head from "next/head";
 import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +21,6 @@ const search = () => {
     formState: { errors },
   } = useForm({ defaultValues: { query: "" } });
   const formSubmit = async () => {
-    console.log("first");
     const query = watch("query");
     try {
       reset();
@@ -43,8 +43,6 @@ const search = () => {
           user: searchList?.userId,
         })
       );
-
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
@@ -52,11 +50,16 @@ const search = () => {
 
   return (
     <>
+      <Head>
+        <title>Search Users | Chat App</title>
+      </Head>
       <div className='h-[80vh] w-full my-8'>
         <form
           onSubmit={handleSubmit(formSubmit)}
           className='flex relative items-center justify-between px-12'>
-          <div className=' mx-auto'>
+          <div
+            className='flex w-full mx-auto border-2 border-blue-500 rounded-md max-w-md'
+            style={{ boxSizing: "border-box" }}>
             <input
               type='text'
               {...register("query", {
@@ -69,17 +72,17 @@ const search = () => {
               })}
               autoComplete='off'
               id='query'
-              className='ring-2 px-4 rounded-l-md w-96 h-9 focus:outline-0'
+              className='basis-2/3 focus:outline-none pl-4 h-10 rounded-l-md'
               placeholder='jhon@chatapp.com'
             />
-            <input
+            <button
               type='submit'
-              value='Search'
-              className='cursor-pointer rounded-r-md px-4 py-2 bg-blue-500 text-white text-bold '
-            />
+              className='basis-1/3 ring-2 bg-blue-500 ring-blue-500 h-10 rounded-r-md font-medium cursor-pointer text-white text-lg'>
+              Search
+            </button>
           </div>
           {errors.query && (
-            <p className='text-red-500 absolute top-10 text-sm font-bold left-1/2 -translate-x-1/2'>
+            <p className='form_error absolute top-14 text-sm font-bold left-1/2 -translate-x-1/2'>
               {errors.query.message}
             </p>
           )}

@@ -4,8 +4,19 @@ import Layout from "../Layout";
 import SelectedUserProvider from "../context/SelectedUserContext";
 import UserInfoProvider from "../context/UserInfoContext";
 import FriendListContextProvider from "../context/FriendListContext";
+import { useRouter } from "next/router";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  if (router.asPath === "/signup" || router.asPath === "/login") {
+    return (
+      <>
+        <Component {...pageProps} />
+      </>
+    );
+  }
+
   return (
     <>
       <Layout>

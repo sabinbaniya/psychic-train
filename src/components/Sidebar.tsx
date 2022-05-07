@@ -5,6 +5,7 @@ import {
   SetStateAction,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
 } from "react";
 import axiosInstance from "../../axios/axiosInstance";
@@ -61,8 +62,23 @@ const Sidebar = ({ classes }: props) => {
     }
 
     const list = friendsList?.filter((friend) => {
-      return friend.friend.name.startsWith(arg);
+      return friend.friend.name.toLowerCase().startsWith(arg);
     });
+
+    if (list.length === 0) {
+      return setFriendsList([
+        {
+          chatRoomId: "",
+          friend: {
+            avatarUrl: "",
+            email: "",
+            name: "",
+            onlineStatus: false,
+            userId: "",
+          },
+        },
+      ]);
+    }
     setFriendsList(list);
   };
 
@@ -72,16 +88,16 @@ const Sidebar = ({ classes }: props) => {
     useState<IFriendsList[]>(friendsList);
 
   useEffect(() => {
-    try {
-      const fetchUsers = async () => {
+    const fetchUsers = async () => {
+      try {
         const res = await axiosInstance.get("/api/chat/getAllFriends");
         setMainFriendsList(res.data);
         setFriendsList(res.data);
-      };
-      fetchUsers();
-    } catch (error) {
-      console.log(error);
-    }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUsers();
   }, []);
 
   return (
@@ -96,7 +112,7 @@ const Sidebar = ({ classes }: props) => {
           name='query'
           id='user'
           placeholder='Search'
-          className='border-2 border-gray-400 outline-gray-500 rounded-full h-8 px-2 w-10/12 mx-auto'
+          className='border-2 border-gray-400 outline-gray-500 rounded-full h-8 px-4 w-10/12 mx-auto'
         />
       </form>
       <div>

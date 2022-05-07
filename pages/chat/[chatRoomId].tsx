@@ -118,10 +118,11 @@ const Chatbox = () => {
     const chatbox = document.getElementById("chatbox");
     if (chatbox) {
       setTimeout(() => {
+        console.log("scroller called");
         scroller();
-      }, 500);
+      }, 200);
     }
-  });
+  }, []);
 
   useEffect(() => {
     socket.on("get_message", (data) => {
