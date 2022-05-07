@@ -1,3 +1,4 @@
+import { AxiosError } from "axios";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -39,12 +40,24 @@ const login = () => {
         "/api/auth/login",
         JSON.stringify(data)
       );
-      console.log(res);
 
       if (res.status === 200) {
         return router.push("/");
       }
     } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        if (err.response.status === 401) {
+          return setErrorFromServer("Invalid Credentials");
+        }
+
+        if (err.response.status === 500) {
+          return setErrorFromServer(
+            "Internal Server Error ! Please try again later :)"
+          );
+        }
+      }
+
       setErrorFromServer(
         "Network Error! Please try again later or contact support"
       );
