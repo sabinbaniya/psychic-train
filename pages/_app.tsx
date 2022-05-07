@@ -3,6 +3,7 @@ import type { AppProps } from "next/app";
 import Layout from "../Layout";
 import SelectedUserProvider from "../context/SelectedUserContext";
 import UserInfoProvider from "../context/UserInfoContext";
+import FriendListContextProvider from "../context/FriendListContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -10,7 +11,9 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Layout>
         <SelectedUserProvider>
           <UserInfoProvider>
-            <Component {...pageProps} />
+            <FriendListContextProvider>
+              <Component {...pageProps} />
+            </FriendListContextProvider>
           </UserInfoProvider>
         </SelectedUserProvider>
       </Layout>

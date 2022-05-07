@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import axiosInstance from "../../axios/axiosInstance";
+import { friendListContext } from "../../context/FriendListContext";
 import { SelectedUserContext } from "../../context/SelectedUserContext";
 import { UserInfoContext } from "../../context/UserInfoContext";
 
@@ -55,9 +56,9 @@ const Sidebar = ({ classes }: props) => {
   };
 
   const handleChange = (arg: string) => {
-    if (arg === "") {
-      return setFriendsList(mainFriendsList);
-    }
+    // if (arg === "") {
+    //   return setFriendsList(mainFriendsList);
+    // }
 
     const list = friendsList?.filter((friend) => {
       return friend.friend.name.startsWith(arg);
@@ -65,19 +66,17 @@ const Sidebar = ({ classes }: props) => {
     setFriendsList(list);
   };
 
-  const [friendsList, setFriendsList] = useState<IFriendsList[] | undefined>(
-    undefined
-  );
+  const { friendsList, setFriendsList } = useContext(friendListContext);
 
-  const [mainFriendsList, setMainFriendsList] = useState<
-    IFriendsList[] | undefined
-  >(undefined);
+  // const [mainFriendsList, setMainFriendsList] = useState<
+  //   IFriendsList[] | undefined
+  // >(undefined);
 
   useEffect(() => {
     try {
       const fetchUsers = async () => {
         const res = await axiosInstance.get("/api/chat/getAllFriends");
-        setMainFriendsList(res.data);
+        // setMainFriendsList(res.data);
         setFriendsList(res.data);
       };
       fetchUsers();
@@ -85,6 +84,8 @@ const Sidebar = ({ classes }: props) => {
       console.log(error);
     }
   }, []);
+
+  console.log(friendsList);
 
   return (
     <div className={`bg-gray-100 h-[90vh] w-full overflow-y-auto ${classes}`}>

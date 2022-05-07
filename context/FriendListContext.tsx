@@ -1,4 +1,11 @@
-import {Dispatch, SetStateAction, useContext, useState } from "react"
+import {
+  createContext,
+  Dispatch,
+  ReactChild,
+  SetStateAction,
+  useContext,
+  useState,
+} from "react";
 
 interface IFriendsList {
   chatRoomId: string;
@@ -12,32 +19,34 @@ interface IFriendsList {
 }
 
 interface IFriendsListContext {
-    friendsList: IFriendsList[];
-    setFriendsList: Dispatch<SetStateAction<IFriendsList[]>>
+  friendsList: IFriendsList[];
+  setFriendsList: Dispatch<SetStateAction<IFriendsList[]>>;
 }
 
-const FriendListContext = useContext<IFriendsListContext>({
-  friendsList: [{
-        chatRoomId: "string",
-        friend: {
-            userId: "string",
-            name: "string",
-            email: "string",
-            avatarUrl: "string",
-            onlineStatus: false,
-        },
-  }]
+export const friendListContext = createContext<IFriendsListContext>({
+  friendsList: [] as IFriendsList[],
   setFriendsList: () => {},
 });
 
-const FriendListContextProvider = () => {
-    const [friendsList, setFriendsList] = useState<IFriendsList[] | undefined>(
-      undefined
-    );
+const FriendListContextProvider = ({ children }: { children: ReactChild }) => {
+  const [friendsList, setFriendsList] = useState<IFriendsList[]>([
+    {
+      chatRoomId: "",
+      friend: {
+        userId: "",
+        name: "",
+        email: "",
+        avatarUrl: "",
+        onlineStatus: false,
+      },
+    },
+  ]);
 
-    const [mainFriendsList, setMainFriendsList] = useState<
-      IFriendsList[] | undefined
-    >(undefined);
+  return (
+    <friendListContext.Provider value={{ friendsList, setFriendsList }}>
+      {children}
+    </friendListContext.Provider>
+  );
+};
 
-
-}
+export default FriendListContextProvider;
