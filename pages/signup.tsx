@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import axiosInstance from "../axios/axiosInstance";
 import Link from "next/link";
+import { AxiosError } from "axios";
 
 const signup = () => {
   const {
@@ -26,6 +27,7 @@ const signup = () => {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState({ p: false, cp: false });
+  const [errorFromServer, setErrorFromServer] = useState("");
 
   const submit = async () => {
     const password = watch("password");
@@ -58,7 +60,24 @@ const signup = () => {
       if (res.status === 201) {
         return router.push("/");
       }
-    } catch (error) {}
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response) {
+        if (err.response.status === 400) {
+          return setErrorFromServer("Invalid Credentials");
+        }
+
+        if (err.response.status === 500) {
+          return setErrorFromServer(
+            "Internal Server Error ! Please try again later :)"
+          );
+        }
+      }
+
+      setErrorFromServer(
+        "Network Error! Please try again later or contact support"
+      );
+    }
   };
 
   return (
@@ -194,6 +213,9 @@ const signup = () => {
                 <p className='form_error'>{errors.cPassword.message}</p>
               )}
             </div>
+            <span className='text-red-400 text-md font-bold'>
+              {errorFromServer.length !== 0 && errorFromServer}
+            </span>
             <div className='grid place-items-center'>
               <input
                 type='submit'
