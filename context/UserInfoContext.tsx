@@ -17,7 +17,7 @@ interface IUserInfo {
 }
 
 export const UserInfoContext = createContext<IUserInfoContext>({
-  userInfo: {} as IUserInfo,
+  userInfo: { name: "", status: "" },
   setUserInfo: () => {},
 });
 

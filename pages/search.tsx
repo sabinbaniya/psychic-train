@@ -3,16 +3,20 @@ import Image from "next/image";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import axiosInstance from "../axios/axiosInstance";
+import { FaUserFriends } from "react-icons/fa";
+import { AiOutlineUserAdd } from "react-icons/ai";
 
 interface ISearchList {
   name: string;
   avatarUrl: string;
   joinedAt: string;
   userId: string;
+  areAlreadyFriends: boolean;
 }
 
 const search = () => {
   const [searchList, setSearchList] = useState<ISearchList | null>(null);
+  const [alreadyFriends, setAlreadyFriends] = useState(false);
   const {
     register,
     handleSubmit,
@@ -29,6 +33,7 @@ const search = () => {
         JSON.stringify({ email: query })
       );
 
+      setAlreadyFriends(res.data.user.areAlreadyFriends);
       setSearchList(res.data.user);
     } catch (e) {
       console.log(e);
@@ -43,6 +48,7 @@ const search = () => {
           user: searchList?.userId,
         })
       );
+      setAlreadyFriends(true);
     } catch (error) {
       console.log(error);
     }
@@ -108,8 +114,13 @@ const search = () => {
                   </p>
                   <button
                     onClick={handleClick}
-                    className='px-4 py-2 rounded-md bg-gradient-to-br from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600 text-white my-2 w-full font-bold'>
-                    Add Friend
+                    className={`px-4 py-2 flex items-center justify-around rounded-md bg-gradient-to-br text-white my-2 w-full font-bold ${
+                      alreadyFriends
+                        ? "from-gray-400 to-stone-500 "
+                        : "from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600"
+                    }`}>
+                    {alreadyFriends ? "Friends" : "Add Friend"}
+                    {alreadyFriends ? <FaUserFriends /> : <AiOutlineUserAdd />}
                   </button>
                 </div>
               </>

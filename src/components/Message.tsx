@@ -2,6 +2,7 @@ import { LegacyRef } from "react";
 import TextMessage from "./TextMessage";
 
 interface props {
+  _id: string;
   author: string;
   author_name: string;
   msg: string;
@@ -15,6 +16,7 @@ interface props {
 
 const Message = ({
   author,
+  _id,
   author_name,
   msg,
   createdAt,
@@ -29,9 +31,8 @@ const Message = ({
 
   return (
     <div
-      key={createdAt}
       ref={firstMessageRef}
-      className={`w-11/12 mx-auto my-4  ${
+      className={`w-11/12 mx-auto my-4 ${
         author === user?.uid ? "text-right" : "text-left"
       }`}>
       <p
@@ -41,7 +42,6 @@ const Message = ({
         {author_name}
       </p>
       <TextMessage {...textMessageProps} />
-
       <p className={`text-gray-500 text-xs px-2 pt-2`}>
         {new Date(createdAt).toLocaleString().split(",")[0] ===
         new Date().toLocaleString().split(",")[0]

@@ -4,6 +4,10 @@
   font-family: "Inter", sans-serif;
 }
 
+body {
+  overflow-x: hidden;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 10px;

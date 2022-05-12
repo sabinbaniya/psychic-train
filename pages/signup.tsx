@@ -58,7 +58,7 @@ const signup = () => {
       );
 
       if (res.status === 201) {
-        return router.push("/");
+        return router.push("/verify");
       }
     } catch (error) {
       const err = error as AxiosError;
@@ -178,7 +178,7 @@ const signup = () => {
             </div>
             <div className='form_div relative'>
               <label
-                htmlFor=' my-4 space-y-1confirmPassword '
+                htmlFor='confirmPassword '
                 className='font-medium text-gray-900'>
                 Confirm Password
               </label>

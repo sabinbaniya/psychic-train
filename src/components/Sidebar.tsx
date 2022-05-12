@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { parse } from "cookie";
 import {
   Dispatch,
   SetStateAction,
@@ -31,6 +32,7 @@ interface IFriendsList {
 interface props {
   setUserInfo?: Dispatch<SetStateAction<IUserInfo | undefined>>;
   classes?: string;
+  setSkip?: Dispatch<SetStateAction<number>>;
 }
 
 interface handleClickProps {
@@ -40,21 +42,30 @@ interface handleClickProps {
   chatRoomId: string;
 }
 
-const Sidebar = ({ classes }: props) => {
-  const { setSelectedUser } = useContext(SelectedUserContext);
+const Sidebar = ({ classes, setSkip }: props) => {
   const { setUserInfo } = useContext(UserInfoContext);
+  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
 
   const router = useRouter();
+
+  const [onHomepage, setOnHomepage] = useState(true);
+
   const handleClick = ({
-    userId,
     name,
     onlineStatus,
     chatRoomId,
   }: handleClickProps) => {
-    setSelectedUser(userId);
+    if (setSkip) {
+      setSkip(0);
+    }
+    setSelectedUser(chatRoomId);
     setUserInfo({ name, status: onlineStatus });
     return router.push("http://localhost:3000/chat/" + chatRoomId);
   };
+
+  useEffect(() => {
+    setOnHomepage(router.asPath === "/");
+  }, []);
 
   const handleChange = (arg: string) => {
     if (arg === "") {
@@ -116,10 +127,14 @@ const Sidebar = ({ classes }: props) => {
         />
       </form>
       <div>
-        {friendsList[0].chatRoomId !== "" &&
+        {friendsList[0]?.chatRoomId !== "" ? (
           friendsList.map((friend) => (
             <div
-              className='flex h-20 border-b-2 space-x-4 w-11/12 mx-auto space-y-1 items-center cursor-pointer'
+              className={`flex overflow-x-hidden h-20 border-b-2 space-x-4 px-4 pr-0 space-y-1 items-center cursor-pointer ${
+                selectedUser === friend.chatRoomId && !onHomepage
+                  ? "after:w-5 after:h-5 after:bg-gray-300 after:absolute after:rotate-45 relative after:-right-3"
+                  : ""
+              }`}
               onClick={() =>
                 handleClick({
                   userId: friend.friend.userId,
@@ -140,10 +155,19 @@ const Sidebar = ({ classes }: props) => {
               </div>
               <div>
                 <p>{friend.friend.name}</p>
-                <p className='text-gray-500'>{friend.friend.onlineStatus}</p>
+                <p className='text-gray-400 text-sm'>
+                  {friend.friend.onlineStatus ? "online" : "offline"}
+                </p>
               </div>
             </div>
-          ))}
+          ))
+        ) : (
+          <div>
+            <p className='px-6 py-2'>
+              Go on More {">"} Search People & Search for friends to add
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );

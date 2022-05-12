@@ -1,13 +1,9 @@
 import type { NextPage } from "next";
 import Head from "next/head";
-import { useContext, useEffect, useState } from "react";
-import { SelectedUserContext } from "../context/SelectedUserContext";
-import { UserInfoContext } from "../context/UserInfoContext";
+import { useEffect, useState } from "react";
 import { Chatbox, Sidebar } from "../src/components";
 
 const Home: NextPage = () => {
-  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
-  const { userInfo, setUserInfo } = useContext(UserInfoContext);
   const [windowWidth, setWindowWidth] = useState(0);
 
   const checkSize = () => {
@@ -31,11 +27,7 @@ const Home: NextPage = () => {
       </Head>
       <div className='flex'>
         {windowWidth < 640 ? (
-          selectedUser.length > 0 ? (
-            <Chatbox selectedUser={selectedUser} />
-          ) : (
-            <Sidebar classes='basis-full max-w-none' />
-          )
+          <Sidebar classes='basis-full max-w-none' />
         ) : (
           <>
             <Sidebar classes='basis-1/3' />

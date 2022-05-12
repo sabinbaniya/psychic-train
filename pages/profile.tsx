@@ -42,7 +42,7 @@ const profile = () => {
       <Head>
         <title>Profile | Chat App</title>
       </Head>
-      <h1 className='text-center text-2xl bg-blue-500 text-gray-600 my-4 font-bold'>
+      <h1 className='text-center text-2xl text-gray-600 my-4 font-bold'>
         Profile
       </h1>
       <div>
@@ -74,13 +74,13 @@ const profile = () => {
             </div>
 
             <p className='text-center text-xl font-bold my-4'>Friends</p>
-            <div className='flex items-center justify-around'>
-              <div>
+            <div className=''>
+              <div className=' mx-auto flex flex-wrap sm:flex-nowrap items-center justify-center sm:space-y-0 space-y-4'>
                 {userInfo.friends.map((friend) => {
                   return (
                     <div
                       key={friend._id}
-                      className='bg-gray-50 shadow-sm text-center w-max mx-auto p-4 rounded-lg'>
+                      className='bg-gray-50 shadow-sm mx-4 text-center w-72 p-4 rounded-lg'>
                       <div>
                         <Image
                           src={friend.avatarUrl}

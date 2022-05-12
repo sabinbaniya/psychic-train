@@ -1,20 +1,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axiosInstance from "../../axios/axiosInstance";
+import { UserInfoContext } from "../../context/UserInfoContext";
 
-interface props {
-  userInfo?: {
-    name: string;
-    status: string;
-  };
-}
-
-const Navbar = ({ userInfo }: props) => {
+const Navbar = () => {
   const [showSettings, setShowSettings] = useState(false);
   const router = useRouter();
+  const { userInfo } = useContext(UserInfoContext);
 
   const handleLogout = async () => {
     try {
@@ -43,7 +38,7 @@ const Navbar = ({ userInfo }: props) => {
           width='50px'
           className='rounded-full'></Image>
         <div className='text-center'>
-          {userInfo ? (
+          {userInfo.name !== "" && router.asPath.includes("/chat/") ? (
             <>
               <p className='font-medium text-lg md:text-xl'>{userInfo.name}</p>
               <p className='font-light text-gray-500'>{userInfo.status}</p>

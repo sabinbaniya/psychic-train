@@ -17,6 +17,7 @@ import Message from "../../src/components/Message";
 
 interface IMessage {
   author: string;
+  _id: string;
   author_name: string;
   msg: string;
   chatRoomId: string;
@@ -31,16 +32,29 @@ interface IUser {
 const socket = io("http://localhost:5000");
 
 const Chatbox = () => {
+  const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [scrollNow, setScrollNow] = useState(false);
 
   const [user, setUser] = useState<IUser | null>(null);
   const [skip, setSkip] = useState(0);
   const [messagesRemaining, setMessagesRemaining] = useState<boolean>(false);
 
   const [messages, setMessages] = useState<IMessage[]>([
-    { author: "", author_name: "", msg: "", chatRoomId: "", createdAt: "" },
+    {
+      _id: "",
+      author: "",
+      author_name: "",
+      msg: "",
+      chatRoomId: "",
+      createdAt: "",
+    },
   ]);
+
+  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
+
+  const [windowWidth, setWindowWidth] = useState(0);
 
   const observer = useRef<IntersectionObserver>();
   const firstMessageRef = useCallback(
@@ -61,6 +75,10 @@ const Chatbox = () => {
     [loading, messagesRemaining]
   );
 
+  const latestMessage = useRef<HTMLDivElement | null>(null);
+
+  const scroller = () => {};
+
   useEffect(() => {
     const { uid, uname } = parse(document.cookie);
     setUser({
@@ -70,17 +88,38 @@ const Chatbox = () => {
   }, []);
 
   useEffect(() => {
-    const chatRoomId = window.location.pathname.split("/")[2];
+    let user = window.location.href.split("/")[4];
+    setSelectedUser(user);
+  }, []);
+
+  useEffect(() => {
+    setSelectedUser(window.location.pathname.split("/")[2]);
+  }, []);
+
+  useEffect(() => {
     setLoading(true);
     const getMessages = async () => {
       try {
+        if (!selectedUser) return;
         const res = await axiosInstance.get(
-          `/api/chat/getAllMessages/${chatRoomId}?skip=${skip}`
+          `/api/chat/getAllMessages/${selectedUser}?skip=${skip}`
         );
-
+        // setScrollNow(true);
         setMessagesRemaining(res.data.messages.messageId.length !== 0);
+        if (skip === 0) {
+          setMessages([
+            {
+              _id: "",
+              author: "",
+              author_name: "",
+              msg: "",
+              chatRoomId: "",
+              createdAt: "",
+            },
+          ]);
+        }
 
-        if (messages[0].author !== "") {
+        if (messages[0]?.author !== "" && skip !== 0) {
           return setMessages((messages) => [
             ...res.data.messages.messageId.reverse(),
             ...messages,
@@ -92,44 +131,29 @@ const Chatbox = () => {
         console.log(error);
         setError(true);
       } finally {
+        // setScrollNow(false);
         setLoading(false);
       }
     };
 
     getMessages();
-  }, [skip]);
+  }, [skip, selectedUser]);
 
   useEffect(() => {
     const chatRoomId = window.location.pathname.split("/")[2];
     socket.emit("join_room", chatRoomId);
   }, []);
 
-  function scroller() {
-    const scrollHeightx =
-      (document.getElementById("chatbox") as HTMLElement).scrollHeight + 50;
-    (document.getElementById("chatbox") as HTMLElement).scrollTo({
-      top: scrollHeightx,
-      left: 0,
-      behavior: "smooth",
-    });
-  }
-
-  useEffect(() => {
-    const chatbox = document.getElementById("chatbox");
-    if (chatbox) {
-      setTimeout(() => {
-        console.log("scroller called");
-        scroller();
-      }, 200);
-    }
-  }, []);
-
   useEffect(() => {
     socket.on("get_message", (data) => {
       setMessages((prev) => [...prev, data]);
-      // setTimeout(() => {
-      //   scroller();
-      // }, 200);
+    });
+  }, [socket]);
+
+  useEffect(() => {
+    latestMessage.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "end",
     });
   }, [socket]);
 
@@ -138,7 +162,6 @@ const Chatbox = () => {
 
     const chatRoomId = window.location.pathname.split("/")[2];
 
-    const msg = (document.getElementById("msg") as HTMLFormElement).value;
     if (msg === "") return;
     const messageObj = {
       msg,
@@ -149,16 +172,10 @@ const Chatbox = () => {
 
     socket.emit("send_message", messageObj);
 
-    (document.getElementById("msg") as HTMLFormElement).value = "";
+    setMsg("");
   };
 
-  // to be removed to global context
-  const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
-  const { userInfo, setUserInfo } = useContext(UserInfoContext);
-
-  const [windowWidth, setWindowWidth] = useState(0);
-
-  const checkSize = () => {
+  const setSizefn = () => {
     setWindowWidth(window.innerWidth);
   };
 
@@ -166,9 +183,9 @@ const Chatbox = () => {
     if (windowWidth === 0) {
       setWindowWidth(window.innerWidth);
     }
-    window.addEventListener("resize", checkSize);
+    window.addEventListener("resize", setSizefn);
     return () => {
-      window.removeEventListener("resize", checkSize);
+      window.removeEventListener("resize", setSizefn);
     };
   });
 
@@ -177,7 +194,7 @@ const Chatbox = () => {
       <Head>
         <title>Chat</title>
       </Head>
-      <div className='flex '>
+      <div className='flex sm:flex-row flex-col'>
         {windowWidth < 640 ? (
           selectedUser.length > 0 ? (
             <>
@@ -186,74 +203,20 @@ const Chatbox = () => {
                   messages.map((message, index) => {
                     if (index === 0) {
                       return (
-                        <div
-                          key={Math.random()}
-                          ref={firstMessageRef}
-                          className={`w-11/12 mx-auto my-4  ${
-                            message.author === user?.uid
-                              ? "text-right"
-                              : "text-left"
-                          }`}>
-                          <p
-                            className={`text-sm text-gray-500 px-2 ${
-                              message.author === user?.uid ? "hidden" : "block"
-                            }`}>
-                            {message.author_name}
-                          </p>
-                          <p
-                            className={` px-4 py-2 text-center rounded-full inline-block ${
-                              message.author === user?.uid
-                                ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
-                                : "bg-gradient-to-tl from-gray-700 to-black text-white"
-                            }`}>
-                            {message.msg}
-                          </p>
-                          <p className={`text-gray-500 text-xs px-2 pt-2`}>
-                            {new Date(message.createdAt)
-                              .toLocaleString()
-                              .split(",")[0] ===
-                            new Date().toLocaleString().split(",")[0]
-                              ? new Date(message.createdAt)
-                                  .toLocaleString()
-                                  .split(" ")[1]
-                              : new Date(message.createdAt).toLocaleString()}
-                          </p>
+                        <div ref={latestMessage}>
+                          <Message
+                            key={message._id}
+                            {...message}
+                            user={user}
+                            firstMessageRef={firstMessageRef}
+                          />
                         </div>
                       );
                     }
 
                     return (
-                      <div
-                        key={Math.random()}
-                        className={`w-11/12 mx-auto my-4  ${
-                          message.author === user?.uid
-                            ? "text-right"
-                            : "text-left"
-                        }`}>
-                        <p
-                          className={`text-sm text-gray-500 px-2 ${
-                            message.author === user?.uid ? "hidden" : "block"
-                          }`}>
-                          {message.author_name}
-                        </p>
-                        <p
-                          className={` px-4 py-2 text-center rounded-full inline-block ${
-                            message.author === user?.uid
-                              ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
-                              : "bg-gradient-to-tl from-gray-700 to-black text-white"
-                          }`}>
-                          {message.msg}
-                        </p>
-                        <p className={`text-gray-500 text-xs px-2 pt-2`}>
-                          {new Date(message.createdAt)
-                            .toLocaleString()
-                            .split(",")[0] ===
-                          new Date().toLocaleString().split(",")[0]
-                            ? new Date(message.createdAt)
-                                .toLocaleString()
-                                .split(" ")[1]
-                            : new Date(message.createdAt).toLocaleString()}
-                        </p>
+                      <div ref={latestMessage}>
+                        <Message key={message._id} {...message} user={user} />
                       </div>
                     );
                   })
@@ -267,7 +230,8 @@ const Chatbox = () => {
                 <input
                   type='text'
                   name='text'
-                  id='msg'
+                  value={msg}
+                  onChange={(e) => setMsg(e.target.value)}
                   className='w-full px-4 border-0 outline-none'
                   autoComplete='off'
                   placeholder='Start typing...'
@@ -280,26 +244,33 @@ const Chatbox = () => {
               </form>
             </>
           ) : (
-            <Sidebar classes='basis-full max-w-none' />
+            <Sidebar classes='basis-full max-w-none' setSkip={setSkip} />
           )
         ) : (
           <>
-            <Sidebar classes='basis-1/3 max-w-sm ' />
+            <Sidebar setSkip={setSkip} classes='basis-1/3 max-w-sm ' />
             <div className='basis-full'>
-              <div className='h-[84vh]   w-full overflow-y-scroll' id='chatbox'>
+              <div className='h-[84vh] w-full overflow-y-scroll' id='chatbox'>
                 {messages[0]?.author !== "" ? (
                   messages.map((message, index) => {
                     if (index === 0) {
                       return (
-                        <Message
-                          {...message}
-                          user={user}
-                          firstMessageRef={firstMessageRef}
-                        />
+                        <div ref={latestMessage}>
+                          <Message
+                            key={message._id}
+                            {...message}
+                            user={user}
+                            firstMessageRef={firstMessageRef}
+                          />
+                        </div>
                       );
                     }
 
-                    return <Message {...message} user={user} />;
+                    return (
+                      <div ref={latestMessage}>
+                        <Message key={message._id} {...message} user={user} />
+                      </div>
+                    );
                   })
                 ) : (
                   <p className='text-center pt-[75vh] text-gray-600 font-light text-lg'>
@@ -311,7 +282,8 @@ const Chatbox = () => {
                 <input
                   type='text'
                   name='text'
-                  id='msg'
+                  value={msg}
+                  onChange={(e) => setMsg(e.target.value)}
                   className='w-full px-4 border-0 outline-none'
                   autoComplete='off'
                   placeholder='Start typing...'
