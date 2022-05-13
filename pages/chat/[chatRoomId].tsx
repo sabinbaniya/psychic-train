@@ -9,11 +9,12 @@ import {
 } from "react";
 import { io } from "socket.io-client";
 import axiosInstance from "../../axios/axiosInstance";
-import { parse } from "cookie";
+import { parse, serialize } from "cookie";
 import { Sidebar } from "../../src/components";
 import { SelectedUserContext } from "../../context/SelectedUserContext";
 import { UserInfoContext } from "../../context/UserInfoContext";
 import Message from "../../src/components/Message";
+import { GetServerSideProps } from "next";
 
 interface IMessage {
   author: string;
@@ -29,28 +30,47 @@ interface IUser {
   uname: string;
 }
 
+interface props {
+  messageProps: IMessage[];
+}
+
 const socket = io("http://localhost:5000");
 
-const Chatbox = () => {
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  let messageProps: IMessage[] | null = null;
+  const cookie = serialize("access", context.req.cookies.access);
+  try {
+    const res = await axiosInstance.get(
+      `/api/chat/getAllMessages/${context?.params?.chatRoomId}?skip=0`,
+      {
+        headers: {
+          cookie,
+        },
+      }
+    );
+
+    messageProps = res.data.messages.messageId.reverse();
+  } catch (error) {
+    console.log(error);
+  }
+
+  return {
+    props: {
+      messageProps,
+    },
+  };
+};
+
+const Chatbox = ({ messageProps }: props) => {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [scrollNow, setScrollNow] = useState(false);
 
   const [user, setUser] = useState<IUser | null>(null);
   const [skip, setSkip] = useState(0);
   const [messagesRemaining, setMessagesRemaining] = useState<boolean>(false);
 
-  const [messages, setMessages] = useState<IMessage[]>([
-    {
-      _id: "",
-      author: "",
-      author_name: "",
-      msg: "",
-      chatRoomId: "",
-      createdAt: "",
-    },
-  ]);
+  const [messages, setMessages] = useState<IMessage[]>(messageProps);
 
   const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
 
@@ -77,8 +97,6 @@ const Chatbox = () => {
 
   const latestMessage = useRef<HTMLDivElement | null>(null);
 
-  const scroller = () => {};
-
   useEffect(() => {
     const { uid, uname } = parse(document.cookie);
     setUser({
@@ -97,6 +115,16 @@ const Chatbox = () => {
   }, []);
 
   useEffect(() => {
+    setMessages(messageProps);
+    console.log(latestMessage.current);
+
+    latestMessage.current?.scrollIntoView({
+      behavior: "smooth",
+      inline: "end",
+    });
+  }, [messageProps]);
+
+  useEffect(() => {
     setLoading(true);
     const getMessages = async () => {
       try {
@@ -104,19 +132,9 @@ const Chatbox = () => {
         const res = await axiosInstance.get(
           `/api/chat/getAllMessages/${selectedUser}?skip=${skip}`
         );
-        // setScrollNow(true);
         setMessagesRemaining(res.data.messages.messageId.length !== 0);
         if (skip === 0) {
-          setMessages([
-            {
-              _id: "",
-              author: "",
-              author_name: "",
-              msg: "",
-              chatRoomId: "",
-              createdAt: "",
-            },
-          ]);
+          return;
         }
 
         if (messages[0]?.author !== "" && skip !== 0) {
@@ -131,7 +149,6 @@ const Chatbox = () => {
         console.log(error);
         setError(true);
       } finally {
-        // setScrollNow(false);
         setLoading(false);
       }
     };
@@ -148,9 +165,6 @@ const Chatbox = () => {
     socket.on("get_message", (data) => {
       setMessages((prev) => [...prev, data]);
     });
-  }, [socket]);
-
-  useEffect(() => {
     latestMessage.current?.scrollIntoView({
       behavior: "smooth",
       inline: "end",
@@ -203,21 +217,17 @@ const Chatbox = () => {
                   messages.map((message, index) => {
                     if (index === 0) {
                       return (
-                        <div ref={latestMessage}>
-                          <Message
-                            key={message._id}
-                            {...message}
-                            user={user}
-                            firstMessageRef={firstMessageRef}
-                          />
-                        </div>
+                        <Message
+                          key={message._id}
+                          {...message}
+                          user={user}
+                          firstMessageRef={firstMessageRef}
+                        />
                       );
                     }
 
                     return (
-                      <div ref={latestMessage}>
-                        <Message key={message._id} {...message} user={user} />
-                      </div>
+                      <Message key={message._id} {...message} user={user} />
                     );
                   })
                 ) : (
@@ -226,6 +236,7 @@ const Chatbox = () => {
                   </p>
                 )}
               </div>
+              <div ref={latestMessage} className='bg-black h-4 w-full'></div>
               <form className='h-[6vh] flex' onSubmit={handleSubmit}>
                 <input
                   type='text'
@@ -255,21 +266,17 @@ const Chatbox = () => {
                   messages.map((message, index) => {
                     if (index === 0) {
                       return (
-                        <div ref={latestMessage}>
-                          <Message
-                            key={message._id}
-                            {...message}
-                            user={user}
-                            firstMessageRef={firstMessageRef}
-                          />
-                        </div>
+                        <Message
+                          key={message._id}
+                          {...message}
+                          user={user}
+                          firstMessageRef={firstMessageRef}
+                        />
                       );
                     }
 
                     return (
-                      <div ref={latestMessage}>
-                        <Message key={message._id} {...message} user={user} />
-                      </div>
+                      <Message key={message._id} {...message} user={user} />
                     );
                   })
                 ) : (
@@ -277,6 +284,7 @@ const Chatbox = () => {
                     No conversations yet.
                   </p>
                 )}
+                <div ref={latestMessage} className='bg-black h-4 w-full'></div>
               </div>
               <form className='h-[6vh] flex' onSubmit={handleSubmit}>
                 <input

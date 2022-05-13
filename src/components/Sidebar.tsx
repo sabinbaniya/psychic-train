@@ -72,7 +72,7 @@ const Sidebar = ({ classes, setSkip }: props) => {
       return setFriendsList(mainFriendsList);
     }
 
-    const list = friendsList?.filter((friend) => {
+    const list = mainFriendsList?.filter((friend) => {
       return friend.friend.name.toLowerCase().startsWith(arg);
     });
 
