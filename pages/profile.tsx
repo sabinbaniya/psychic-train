@@ -75,20 +75,20 @@ const profile = () => {
 
             <p className='text-center text-xl font-bold my-4'>Friends</p>
             <div className=''>
-              <div className=' mx-auto flex flex-wrap sm:flex-nowrap items-center justify-center sm:space-y-0 space-y-4'>
+              <div className=' mx-auto flex flex-wrap  items-center justify-center'>
                 {userInfo.friends.map((friend) => {
                   return (
                     <div
                       key={friend._id}
-                      className='bg-gray-50 shadow-sm mx-4 text-center w-72 p-4 rounded-lg'>
+                      className='bg-gray-50 shadow-sm mx-4 text-center w-72 h-56 p-4 m-4 rounded-lg'>
                       <div>
                         <Image
                           src={friend.avatarUrl}
                           className='rounded-full'
                           height='50'
                           width='50'></Image>
-                        <p>Name: {friend.name}</p>
-                        <p>Email: {friend.email}</p>
+                        <p>{friend.name}</p>
+                        <p>{friend.email}</p>
                         <p>
                           Joined Date:{" "}
                           {new Date(friend.joinedAt).toDateString()}

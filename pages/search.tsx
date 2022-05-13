@@ -116,7 +116,7 @@ const search = () => {
                     onClick={handleClick}
                     className={`px-4 py-2 flex items-center justify-around rounded-md bg-gradient-to-br text-white my-2 w-full font-bold ${
                       alreadyFriends
-                        ? "from-gray-400 to-stone-500 "
+                        ? "from-gray-400 to-stone-500 cursor-default"
                         : "from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600"
                     }`}>
                     {alreadyFriends ? "Friends" : "Add Friend"}

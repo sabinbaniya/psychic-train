@@ -116,12 +116,7 @@ const Chatbox = ({ messageProps }: props) => {
 
   useEffect(() => {
     setMessages(messageProps);
-    console.log(latestMessage.current);
-
-    latestMessage.current?.scrollIntoView({
-      behavior: "smooth",
-      inline: "end",
-    });
+    scroller();
   }, [messageProps]);
 
   useEffect(() => {
@@ -161,14 +156,19 @@ const Chatbox = ({ messageProps }: props) => {
     socket.emit("join_room", chatRoomId);
   }, []);
 
-  useEffect(() => {
-    socket.on("get_message", (data) => {
-      setMessages((prev) => [...prev, data]);
-    });
+  const scroller = () => {
     latestMessage.current?.scrollIntoView({
       behavior: "smooth",
       inline: "end",
     });
+  };
+
+  useEffect(() => {
+    socket.on("get_message", (data) => {
+      console.log("get message");
+      setMessages((prev) => [...prev, data]);
+    });
+    scroller();
   }, [socket]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -236,7 +236,10 @@ const Chatbox = ({ messageProps }: props) => {
                   </p>
                 )}
               </div>
-              <div ref={latestMessage} className='bg-black h-4 w-full'></div>
+              <div
+                ref={latestMessage}
+                onLoad={scroller}
+                className='bg-black h-4 w-full'></div>
               <form className='h-[6vh] flex' onSubmit={handleSubmit}>
                 <input
                   type='text'
