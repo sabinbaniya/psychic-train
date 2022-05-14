@@ -29,6 +29,8 @@ const Message = ({
     user,
   };
 
+  console.log(createdAt);
+
   return (
     <div
       ref={firstMessageRef}
@@ -45,8 +47,12 @@ const Message = ({
       <p className={`text-gray-500 text-xs px-2 pt-2`}>
         {new Date(createdAt).toLocaleString().split(",")[0] ===
         new Date().toLocaleString().split(",")[0]
-          ? new Date(createdAt).toLocaleString().split(" ")[1]
-          : new Date(createdAt).toLocaleString()}
+          ? new Date(createdAt).toLocaleString().split(" ")[1].split(":")[0] +
+            ":" +
+            new Date(createdAt).toLocaleString().split(" ")[1].split(":")[1] +
+            " " +
+            new Date(createdAt).toLocaleString().split(" ")[2]
+          : new Date(createdAt).toLocaleDateString()}
       </p>
     </div>
   );

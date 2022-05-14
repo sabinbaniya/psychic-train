@@ -74,6 +74,7 @@ const Chatbox = ({ messageProps }: props) => {
   const [messages, setMessages] = useState<IMessage[]>(messageProps);
 
   const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
+  const { userInfo } = useContext(UserInfoContext);
 
   const [windowWidth, setWindowWidth] = useState(0);
 
@@ -209,7 +210,7 @@ const Chatbox = ({ messageProps }: props) => {
   return (
     <div className='bg-gray-300 h-[90vh] w-full overflow-y-auto'>
       <Head>
-        <title>Chat</title>
+        <title>Chat | {userInfo.name}</title>
       </Head>
       <div className='flex sm:flex-row flex-col'>
         {windowWidth < 640 ? (

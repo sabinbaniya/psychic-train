@@ -20,32 +20,17 @@ function MyApp({ Component, pageProps }: AppProps) {
     socket.emit("set_online", { status: true, userId: uid });
   }, []);
 
+  useEffect(() => {
+    window.addEventListener("unload", disconnect);
+
+    return () => window.addEventListener("unload", disconnect);
+  });
+
   function disconnect() {
+    console.log("disconnect ran");
     const { uid } = parse(document.cookie);
     socket.emit("set_online", { status: false, userId: uid });
   }
-
-  // function disconnected() {
-  //   socket.on("disconnect", (data) => {
-  //     console.log(data, "disconnected");
-  //   });
-  // }
-
-  useEffect(() => {
-    window.addEventListener("beforeunload", disconnect);
-
-    return () => {
-      window.addEventListener("beforeunload", disconnect);
-    };
-  });
-
-  // useEffect(() => {
-  //   window.addEventListener("beforeunload", disconnected);
-
-  //   return () => {
-  //     window.addEventListener("beforeunload", disconnected);
-  //   };
-  // });
 
   if (
     router.asPath === "/signup" ||
