@@ -47,8 +47,20 @@ const Login = () => {
     } catch (error) {
       const err = error as AxiosError;
       if (err.response) {
-        if (err.response.status === 401) {
+        if (
+          err.response.status === 401 &&
+          err.response.data.msg === "Invalid Credentials"
+        ) {
           return setErrorFromServer("Invalid Credentials");
+        }
+
+        if (
+          err.response.status === 401 &&
+          err.response.data.msg === "User hasn't verified email."
+        ) {
+          return setErrorFromServer(
+            "Please verify your email before signing in"
+          );
         }
 
         if (err.response.status === 500) {
