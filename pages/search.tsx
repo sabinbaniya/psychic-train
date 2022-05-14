@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import axiosInstance from "../axios/axiosInstance";
 import { FaUserFriends } from "react-icons/fa";
 import { AiOutlineUserAdd } from "react-icons/ai";
+import Link from "next/link";
 
 interface ISearchList {
   name: string;
@@ -12,10 +13,13 @@ interface ISearchList {
   joinedAt: string;
   userId: string;
   areAlreadyFriends: boolean;
+  chatRoomId: string;
+  isSelf: boolean;
 }
 
 const Search = () => {
   const [searchList, setSearchList] = useState<ISearchList | null>(null);
+  const [noUsersFound, setNoUsersFound] = useState(false);
   const [alreadyFriends, setAlreadyFriends] = useState(false);
   const {
     register,
@@ -33,8 +37,15 @@ const Search = () => {
         JSON.stringify({ email: query })
       );
 
+      if (res.data.msg === "No users found") {
+        setAlreadyFriends(false);
+        setSearchList(null);
+        return setNoUsersFound(true);
+      }
+
       setAlreadyFriends(res.data.user.areAlreadyFriends);
       setSearchList(res.data.user);
+      setNoUsersFound(false);
     } catch (e) {
       console.log(e);
     }
@@ -42,7 +53,7 @@ const Search = () => {
 
   const handleClick = async () => {
     try {
-      const res = await axiosInstance.post(
+      await axiosInstance.post(
         "/api/chat/add",
         JSON.stringify({
           user: searchList?.userId,
@@ -95,10 +106,15 @@ const Search = () => {
         </form>
         <div>
           <h1 className='font-bold text-xl text-center my-8'>User</h1>
+          {!searchList && !noUsersFound && (
+            <h3 className='text-center text-gray-600 font-medium'>
+              Search for a friend using their email
+            </h3>
+          )}
           <div>
             {searchList && (
               <>
-                <div className='rounded-md shadow-md p-4 h-48 w-64 mx-auto'>
+                <div className='rounded-md shadow-md p-4 h-58 w-64 mx-auto'>
                   <div className='flex items-center my-4'>
                     <Image
                       className='rounded-full'
@@ -113,20 +129,47 @@ const Search = () => {
                     <span>Joined at: </span>
                     {new Date(searchList.joinedAt).toDateString()}
                   </p>
-                  <button
-                    onClick={handleClick}
-                    className={`px-4 py-2 flex items-center justify-around rounded-md bg-gradient-to-br text-white my-2 w-full font-bold ${
-                      alreadyFriends
-                        ? "from-gray-400 to-stone-500 cursor-default"
-                        : "from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600"
-                    }`}>
-                    {alreadyFriends ? "Friends" : "Add Friend"}
-                    {alreadyFriends ? <FaUserFriends /> : <AiOutlineUserAdd />}
-                  </button>
+                  {!searchList.isSelf && (
+                    <button
+                      onClick={handleClick}
+                      className={`px-4 py-2 flex items-center justify-around rounded-md bg-gradient-to-br text-white my-2 w-full font-bold ${
+                        alreadyFriends
+                          ? "from-gray-400 to-stone-500 cursor-default"
+                          : "from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600"
+                      }`}>
+                      {alreadyFriends ? "Friends" : "Add Friend"}
+                      {alreadyFriends ? (
+                        <FaUserFriends />
+                      ) : (
+                        <AiOutlineUserAdd />
+                      )}
+                    </button>
+                  )}
+
+                  {alreadyFriends && (
+                    <Link
+                      href={
+                        searchList.chatRoomId
+                          ? "../chat/" + searchList.chatRoomId
+                          : "/"
+                      }>
+                      <a
+                        className={`px-4 py-2 flex items-center justify-around rounded-md bg-gradient-to-br text-white my-2 w-full font-bold from-blue-400 to-indigo-500 hover:from-blue-500 hover:to-indigo-600"`}>
+                        Chat Now
+                      </a>
+                    </Link>
+                  )}
                 </div>
               </>
             )}
           </div>
+          {noUsersFound && (
+            <div className='text-center'>
+              <h3 className='text-gray-600 text-lg'>
+                No Users found with given email.
+              </h3>
+            </div>
+          )}
         </div>
       </div>
     </>

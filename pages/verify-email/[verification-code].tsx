@@ -64,9 +64,9 @@ const VerifyEmail = () => {
               </h3>
               <p className='my-4 text-lg text-center '>You can log in now</p>
               <div className='flex justify-center items-center'>
-                <Link href={"/login"}>
+                <Link href={"/"}>
                   <a className='px-4 py-2 rounded-lg bg-blue-500 text-white font-semibold '>
-                    Login
+                    Continue
                   </a>
                 </Link>
               </div>

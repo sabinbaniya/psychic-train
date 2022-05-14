@@ -215,7 +215,7 @@ const Chatbox = ({ messageProps }: props) => {
   return (
     <div className='bg-gray-300 h-[90vh] w-full overflow-y-auto'>
       <Head>
-        <title>Chat | {userInfo.name}</title>
+        <title>Chat {" | " + userInfo.name}</title>
       </Head>
       <div className='flex sm:flex-row flex-col'>
         {windowWidth < 640 ? (
