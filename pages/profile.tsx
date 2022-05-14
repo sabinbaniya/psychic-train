@@ -95,7 +95,7 @@ const Profile = () => {
                           Joined Date:{" "}
                           {new Date(friend.joinedAt).toDateString()}
                         </p>
-                        <Link href={`/chat/${friend.chatRoomId}`}>
+                        <Link href={`/chat/${friend.chatRoomId}`} passHref>
                           <p className='bg-blue-400 cursor-pointer flex justify-between items-center px-8 py-2 my-4 text-white font-bold text-lg rounded-full'>
                             <span>Chat Now</span>
                             <BiMessageDetail />

@@ -110,10 +110,12 @@ const Chatbox = ({ messageProps }: props) => {
   useEffect(() => {
     let user = window.location.href.split("/")[4];
     setSelectedUser(user);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setSelectedUser(window.location.pathname.split("/")[2]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -151,6 +153,7 @@ const Chatbox = ({ messageProps }: props) => {
     };
 
     getMessages();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [skip, selectedUser]);
 
   useEffect(() => {
@@ -174,6 +177,7 @@ const Chatbox = ({ messageProps }: props) => {
       setMessages((prev) => [...prev, data]);
       scroller();
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -197,6 +201,7 @@ const Chatbox = ({ messageProps }: props) => {
     setWindowWidth(window.innerWidth);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (windowWidth === 0) {
       setWindowWidth(window.innerWidth);

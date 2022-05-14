@@ -18,6 +18,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     const { uid } = parse(document.cookie);
     socket.emit("set_online", { status: true, userId: uid });
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

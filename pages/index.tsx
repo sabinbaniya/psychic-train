@@ -10,6 +10,7 @@ const Home: NextPage = () => {
     setWindowWidth(window.innerWidth);
   };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     if (windowWidth === 0) {
       setWindowWidth(window.innerWidth);

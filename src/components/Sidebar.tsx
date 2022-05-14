@@ -74,6 +74,7 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
 
   useEffect(() => {
     setOnHomepage(router.asPath === "/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (arg: string) => {
@@ -117,6 +118,7 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
       };
       fetchUsers();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -158,6 +160,7 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
               key={friend.friend.userId}>
               <div className=''>
                 <Image
+                  alt=''
                   src={friend.friend.avatarUrl}
                   height='40px'
                   width='40px'
