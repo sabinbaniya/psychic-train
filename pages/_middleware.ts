@@ -19,11 +19,20 @@ const middleware = async (req: NextRequest) => {
       return NextResponse.redirect(new URL("/login", url));
     }
 
+    if (url.pathname.startsWith("/search")) {
+      return NextResponse.redirect(new URL("/login", url));
+    }
+
     return NextResponse.next();
   } else {
     try {
       const isValid = jwt.verify(token, process.env.JWT_SECRET as Secret);
-      if (url.pathname === "/login" || url.pathname === "/signup") {
+      if (
+        url.pathname === "/login" ||
+        url.pathname === "/signup" ||
+        url.pathname === "/verify" ||
+        url.pathname.startsWith("/verify-email/")
+      ) {
         if (isValid) {
           return NextResponse.redirect(new URL("/", url));
         }
@@ -39,6 +48,10 @@ const middleware = async (req: NextRequest) => {
       }
 
       if (url.pathname.startsWith("/profile")) {
+        return NextResponse.redirect(new URL("/login", url));
+      }
+
+      if (url.pathname.startsWith("/search")) {
         return NextResponse.redirect(new URL("/login", url));
       }
 

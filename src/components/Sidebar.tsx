@@ -54,7 +54,7 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
 
   const router = useRouter();
 
-  const [onHomepage, setOnHomepage] = useState(true);
+  const [onHomepage, setOnHomepage] = useState(false);
 
   const handleClick = ({
     name,
@@ -103,6 +103,9 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
   };
 
   useEffect(() => {
+    if (friendsList[0]?.chatRoomId === "") {
+      setLoading(true);
+    }
     const fetchUsers = async () => {
       try {
         const res = await axiosInstance.get("/api/chat/getAllFriends");
