@@ -29,8 +29,6 @@ const Message = ({
     user,
   };
 
-  console.log(createdAt);
-
   return (
     <div
       ref={firstMessageRef}

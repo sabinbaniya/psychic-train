@@ -239,8 +239,8 @@ const Chatbox = ({ messageProps }: props) => {
                     No conversations yet.
                   </p>
                 )}
+                <div ref={latestMessage}></div>
               </div>
-              <div ref={latestMessage} onLoad={scroller}></div>
               <form className='h-[6vh] flex' onSubmit={handleSubmit}>
                 <input
                   type='text'

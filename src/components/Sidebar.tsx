@@ -46,7 +46,7 @@ interface handleClickProps {
 const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
   const { setUserInfo } = useContext(UserInfoContext);
   const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const { friendsList, setFriendsList } = useContext(friendListContext);
 
   const [mainFriendsList, setMainFriendsList] =
@@ -105,18 +105,18 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
   useEffect(() => {
     if (friendsList[0]?.chatRoomId === "") {
       setLoading(true);
+      const fetchUsers = async () => {
+        try {
+          const res = await axiosInstance.get("/api/chat/getAllFriends");
+          setLoading(false);
+          setMainFriendsList(res.data);
+          setFriendsList(res.data);
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      fetchUsers();
     }
-    const fetchUsers = async () => {
-      try {
-        const res = await axiosInstance.get("/api/chat/getAllFriends");
-        setLoading(false);
-        setMainFriendsList(res.data);
-        setFriendsList(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUsers();
   }, []);
 
   return (
