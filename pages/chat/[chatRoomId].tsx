@@ -65,6 +65,7 @@ const Chatbox = ({ messageProps }: props) => {
   const [msg, setMsg] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  const [chatRoomId, setChatRoomId] = useState("");
 
   const [user, setUser] = useState<IUser | null>(null);
   const [skip, setSkip] = useState(0);
@@ -152,23 +153,26 @@ const Chatbox = ({ messageProps }: props) => {
   }, [skip, selectedUser]);
 
   useEffect(() => {
-    const chatRoomId = window.location.pathname.split("/")[2];
+    if (!chatRoomId) {
+      setChatRoomId(window.location.pathname.split("/")[2]);
+    }
     socket.emit("join_room", chatRoomId);
-  }, []);
+  }, [chatRoomId]);
 
   const scroller = () => {
-    latestMessage.current?.scrollIntoView({
-      behavior: "smooth",
-      inline: "end",
-    });
+    setTimeout(() => {
+      latestMessage.current?.scrollIntoView({
+        behavior: "smooth",
+        inline: "end",
+      });
+    }, 0);
   };
 
   useEffect(() => {
     socket.on("get_message", (data) => {
-      console.log("get message");
       setMessages((prev) => [...prev, data]);
+      scroller();
     });
-    scroller();
   }, [socket]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
@@ -185,7 +189,6 @@ const Chatbox = ({ messageProps }: props) => {
     };
 
     socket.emit("send_message", messageObj);
-
     setMsg("");
   };
 
@@ -236,10 +239,7 @@ const Chatbox = ({ messageProps }: props) => {
                   </p>
                 )}
               </div>
-              <div
-                ref={latestMessage}
-                onLoad={scroller}
-                className='bg-black h-4 w-full'></div>
+              <div ref={latestMessage} onLoad={scroller}></div>
               <form className='h-[6vh] flex' onSubmit={handleSubmit}>
                 <input
                   type='text'
@@ -258,11 +258,19 @@ const Chatbox = ({ messageProps }: props) => {
               </form>
             </>
           ) : (
-            <Sidebar classes='basis-full max-w-none' setSkip={setSkip} />
+            <Sidebar
+              classes='basis-full max-w-none'
+              setChatRoomId={setChatRoomId}
+              setSkip={setSkip}
+            />
           )
         ) : (
           <>
-            <Sidebar setSkip={setSkip} classes='basis-1/3 max-w-sm ' />
+            <Sidebar
+              setSkip={setSkip}
+              setChatRoomId={setChatRoomId}
+              classes='basis-1/3 max-w-sm '
+            />
             <div className='basis-full'>
               <div className='h-[84vh] w-full overflow-y-scroll' id='chatbox'>
                 {messages[0]?.author !== "" ? (
@@ -287,7 +295,7 @@ const Chatbox = ({ messageProps }: props) => {
                     No conversations yet.
                   </p>
                 )}
-                <div ref={latestMessage} className='bg-black h-4 w-full'></div>
+                <div ref={latestMessage}></div>
               </div>
               <form className='h-[6vh] flex' onSubmit={handleSubmit}>
                 <input

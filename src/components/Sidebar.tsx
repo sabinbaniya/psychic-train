@@ -33,6 +33,7 @@ interface props {
   setUserInfo?: Dispatch<SetStateAction<IUserInfo | undefined>>;
   classes?: string;
   setSkip?: Dispatch<SetStateAction<number>>;
+  setChatRoomId?: Dispatch<SetStateAction<string>>;
 }
 
 interface handleClickProps {
@@ -42,7 +43,7 @@ interface handleClickProps {
   chatRoomId: string;
 }
 
-const Sidebar = ({ classes, setSkip }: props) => {
+const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
   const { setUserInfo } = useContext(UserInfoContext);
   const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
 
@@ -57,6 +58,9 @@ const Sidebar = ({ classes, setSkip }: props) => {
   }: handleClickProps) => {
     if (setSkip) {
       setSkip(0);
+    }
+    if (setChatRoomId) {
+      setChatRoomId(chatRoomId);
     }
     setSelectedUser(chatRoomId);
     setUserInfo({ name, status: onlineStatus });
