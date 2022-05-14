@@ -102,6 +102,7 @@ const Search = () => {
                   <div className='flex items-center my-4'>
                     <Image
                       className='rounded-full'
+                      alt=''
                       src={searchList.avatarUrl}
                       height={64}
                       width={64}

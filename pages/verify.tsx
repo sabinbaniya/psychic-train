@@ -11,7 +11,7 @@ const Verify = () => {
             signed up for.
           </h3>
           <p className='text-gray-600'>
-            Can't find the email? Also try checking your spam folder
+            Can{"'"}t find the email? Also try checking your spam folder
           </p>
           <p className='my-8 text-gray-500'>
             Already verified? Try{" "}

@@ -74,7 +74,7 @@ const VerifyEmail = () => {
           ) : (
             <div className='my-12'>
               <h3 className='my-4 text-center text-xl text-gray-700 font-bold'>
-                Your Email couldn't be verified.
+                Your Email couldn{"'"}t be verified.
               </h3>
               <p className='my-4 text-lg text-center '>
                 Please try again later or try signing up once again

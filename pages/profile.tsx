@@ -52,6 +52,7 @@ const Profile = () => {
               <div>
                 <Image
                   src={userInfo.avatarUrl}
+                  alt=''
                   height='100%'
                   width='100%'></Image>
               </div>
@@ -84,6 +85,7 @@ const Profile = () => {
                       <div>
                         <Image
                           src={friend.avatarUrl}
+                          alt=''
                           className='rounded-full'
                           height='50'
                           width='50'></Image>
