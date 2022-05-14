@@ -7,7 +7,7 @@ import axiosInstance from "../axios/axiosInstance";
 import Link from "next/link";
 import { AxiosError } from "axios";
 
-const signup = () => {
+const Signup = () => {
   const {
     register,
     handleSubmit,
@@ -230,4 +230,4 @@ const signup = () => {
   );
 };
 
-export default signup;
+export default Signup;

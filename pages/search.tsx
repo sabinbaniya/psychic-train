@@ -14,7 +14,7 @@ interface ISearchList {
   areAlreadyFriends: boolean;
 }
 
-const search = () => {
+const Search = () => {
   const [searchList, setSearchList] = useState<ISearchList | null>(null);
   const [alreadyFriends, setAlreadyFriends] = useState(false);
   const {
@@ -132,4 +132,4 @@ const search = () => {
   );
 };
 
-export default search;
+export default Search;

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const verify = () => {
+const Verify = () => {
   return (
     <>
       <div className='flex items-center justify-center h-screen'>
@@ -25,4 +25,4 @@ const verify = () => {
   );
 };
 
-export default verify;
+export default Verify;

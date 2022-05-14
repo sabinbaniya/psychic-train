@@ -26,7 +26,7 @@ interface IUserInfo {
   _id: string;
 }
 
-const profile = () => {
+const Profile = () => {
   const [userInfo, setUserInfo] = useState<IUserInfo | null>(null);
   useEffect(() => {
     const fetcher = async () => {
@@ -112,4 +112,4 @@ const profile = () => {
   );
 };
 
-export default profile;
+export default Profile;

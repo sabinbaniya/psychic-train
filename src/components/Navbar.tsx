@@ -34,6 +34,7 @@ const Navbar = () => {
       <div className='w-11/12 mx-auto flex justify-between items-center h-full'>
         <Image
           src='/avatar.png'
+          alt=''
           height='50px'
           width='50px'
           className='rounded-full'></Image>

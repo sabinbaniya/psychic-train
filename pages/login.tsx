@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import axiosInstance from "../axios/axiosInstance";
 
-const login = () => {
+const Login = () => {
   const {
     register,
     handleSubmit,
@@ -158,4 +158,4 @@ const login = () => {
   );
 };
 
-export default login;
+export default Login;

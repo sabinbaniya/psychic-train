@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axiosInstance";
 
-const verifyEmail = () => {
+const VerifyEmail = () => {
   const [verified, setVerified] = useState<boolean | null>(null);
   useEffect(() => {
     const verificationCode = window.location.pathname.split("/")[2];
@@ -94,4 +94,4 @@ const verifyEmail = () => {
   );
 };
 
-export default verifyEmail;
+export default VerifyEmail;

@@ -13,6 +13,7 @@ const TextMessage = ({ msg, author, user }: props) => {
     return (
       <a
         href={msg}
+        rel='norefferrer'
         target='_blank'
         className={` px-4 py-2 text-center rounded-full underline inline-block ${
           author === user?.uid
