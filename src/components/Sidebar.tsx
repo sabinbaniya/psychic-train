@@ -46,6 +46,11 @@ interface handleClickProps {
 const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
   const { setUserInfo } = useContext(UserInfoContext);
   const { selectedUser, setSelectedUser } = useContext(SelectedUserContext);
+  const [loading, setLoading] = useState(true);
+  const { friendsList, setFriendsList } = useContext(friendListContext);
+
+  const [mainFriendsList, setMainFriendsList] =
+    useState<IFriendsList[]>(friendsList);
 
   const router = useRouter();
 
@@ -97,15 +102,11 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
     setFriendsList(list);
   };
 
-  const { friendsList, setFriendsList } = useContext(friendListContext);
-
-  const [mainFriendsList, setMainFriendsList] =
-    useState<IFriendsList[]>(friendsList);
-
   useEffect(() => {
     const fetchUsers = async () => {
       try {
         const res = await axiosInstance.get("/api/chat/getAllFriends");
+        setLoading(false);
         setMainFriendsList(res.data);
         setFriendsList(res.data);
       } catch (error) {
@@ -131,7 +132,9 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
         />
       </form>
       <div>
-        {friendsList[0]?.chatRoomId !== "" ? (
+        {loading ? (
+          <p className='sm:text-lg py-8 text-center'>Loading...</p>
+        ) : friendsList[0]?.chatRoomId !== "" && friendsList.length !== 0 ? (
           friendsList.map((friend) => (
             <div
               className={`flex overflow-x-hidden h-20 border-b-2 space-x-4 px-4 pr-0 space-y-1 items-center cursor-pointer ${
@@ -167,8 +170,15 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
           ))
         ) : (
           <div>
-            <p className='px-6 py-2'>
-              Go on More {">"} Search People & Search for friends to add
+            <p className='px-6 py-4 text-gray-600'>
+              <span className='text-gray-800 font-medium md:text-lg'>
+                No friends found.
+              </span>
+              <br />
+              <br />
+              Go on <span className='underline'>More</span> {">"}{" "}
+              <span className='underline'>Search People</span> & Search for
+              friends to add
             </p>
           </div>
         )}
