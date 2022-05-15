@@ -42,7 +42,7 @@ const Navbar = () => {
           {userInfo.name !== "" && router.asPath.includes("/chat/") ? (
             <>
               <p className='font-medium text-lg md:text-xl'>{userInfo.name}</p>
-              <p className='font-light text-gray-500'>{userInfo.status}</p>
+              {/* <p className='font-light text-gray-500'>{userInfo.status}</p> */}
             </>
           ) : (
             <Link href={"/"}>Start Messaging</Link>

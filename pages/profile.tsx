@@ -59,14 +59,14 @@ const Profile = () => {
               <div className='text-gray-600'>
                 <p>Name: {userInfo.name}</p>
                 <p>Email: {userInfo.email}</p>
-                <p>
+                {/* <p>
                   Verified Email:{" "}
                   {userInfo.isEmailVerified ? "verified" : "not verified"}
-                </p>
-                <p>
+                </p> */}
+                {/* <p>
                   {" "}
                   Online Status: {userInfo.onlineStatus ? "online" : "offline"}
-                </p>
+                </p> */}
                 <p>
                   Joined Date:{" "}
                   {new Date(userInfo.createdAt).toLocaleDateString()}

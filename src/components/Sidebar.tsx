@@ -170,9 +170,9 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
               </div>
               <div>
                 <p>{friend.friend.name}</p>
-                <p className='text-gray-400 text-sm'>
+                {/* <p className='text-gray-400 text-sm'>
                   {friend.friend.onlineStatus ? "online" : "offline"}
-                </p>
+                </p> */}
               </div>
             </div>
           ))

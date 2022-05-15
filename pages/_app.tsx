@@ -12,28 +12,28 @@ import { parse } from "cookie";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
-  const URL = process.env.NEXT_PUBLIC_URL as string;
+  // const URL = process.env.NEXT_PUBLIC_URL as string;
 
-  const socket = io(URL);
+  // const socket = io(URL);
 
-  useEffect(() => {
-    const { uid } = parse(document.cookie);
-    socket.emit("set_online", { status: true, userId: uid });
+  // useEffect(() => {
+  //   const { uid } = parse(document.cookie);
+  //   socket.emit("set_online", { status: true, userId: uid });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  useEffect(() => {
-    window.addEventListener("unload", disconnect);
+  // useEffect(() => {
+  //   window.addEventListener("unload", disconnect);
 
-    return () => window.addEventListener("unload", disconnect);
-  });
+  //   return () => window.addEventListener("unload", disconnect);
+  // });
 
-  function disconnect() {
-    console.log("disconnect ran");
-    const { uid } = parse(document.cookie);
-    socket.emit("set_online", { status: false, userId: uid });
-  }
+  // function disconnect() {
+  //   console.log("disconnect ran");
+  //   const { uid } = parse(document.cookie);
+  //   socket.emit("set_online", { status: false, userId: uid });
+  // }
 
   if (
     router.asPath === "/signup" ||
