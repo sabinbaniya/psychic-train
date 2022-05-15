@@ -165,7 +165,7 @@ const Search = () => {
           </div>
           {noUsersFound && (
             <div className='text-center'>
-              <h3 className='text-gray-600 text-lg'>
+              <h3 className='text-red-400 text-lg'>
                 No Users found with given email.
               </h3>
             </div>

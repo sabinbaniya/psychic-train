@@ -12,8 +12,9 @@ import { parse } from "cookie";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
+  const URL = process.env.NEXT_PUBLIC_URL as string;
 
-  const socket = io("http://localhost:5000");
+  const socket = io(URL);
 
   useEffect(() => {
     const { uid } = parse(document.cookie);

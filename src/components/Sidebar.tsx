@@ -69,7 +69,9 @@ const Sidebar = ({ classes, setSkip, setChatRoomId }: props) => {
     }
     setSelectedUser(chatRoomId);
     setUserInfo({ name, status: onlineStatus });
-    return router.push("http://localhost:3000/chat/" + chatRoomId);
+    return router.push(
+      process.env.NEXT_PUBLIC_HOST_URL + "/chat/" + chatRoomId
+    );
   };
 
   useEffect(() => {

@@ -34,7 +34,9 @@ interface props {
   messageProps: IMessage[];
 }
 
-const socket = io("http://localhost:5000");
+const URL = process.env.NEXT_PUBLIC_URL as string;
+
+const socket = io(URL);
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   let messageProps: IMessage[] | null = null;

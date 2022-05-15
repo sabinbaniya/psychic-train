@@ -13,8 +13,8 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      document.cookie = "uname=null; expires=-1; path=/";
-      document.cookie = "uid=null; expires=-1; path=/";
+      document.cookie = "uname=null; expires=-1; path=/; domain=localhost";
+      document.cookie = "uid=null; expires=-1; path=/; domain=localhost";
       await axiosInstance.get("/api/auth/logout");
       router.push("/login");
     } catch (error) {
