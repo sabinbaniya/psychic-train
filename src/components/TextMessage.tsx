@@ -10,18 +10,39 @@ const TextMessage = ({ msg, author, user }: props) => {
   );
 
   if (regex.test(msg)) {
+    const msgArr = msg.split(" ");
+
+    const linksArr = msgArr.map((st) => {
+      if (regex.test(st)) {
+        return st;
+      } else {
+        return false;
+      }
+    });
+
     return (
-      <a
-        href={msg}
-        rel='noreferrer'
-        target='_blank'
-        className={` px-4 py-2 text-center rounded-full underline inline-block ${
+      <p
+        className={`px-4 py-2 text-left rounded-full inline-block ${
           author === user?.uid
             ? "bg-gradient-to-tl from-gray-100 to-gray-300 text-black"
             : "bg-gradient-to-tl from-gray-700 to-black text-white"
         }`}>
-        {msg}
-      </a>
+        {msgArr.map((st) => {
+          if (regex.test(st)) {
+            return (
+              <a
+                href={st}
+                className={`underline`}
+                target='_blank'
+                rel='noreferrer'>
+                {" " + st + " "}
+              </a>
+            );
+          } else {
+            return <span>{" " + st + " "}</span>;
+          }
+        })}
+      </p>
     );
   } else {
     return (
