@@ -100,6 +100,7 @@ const Chatbox = ({ messageProps }: props) => {
   );
 
   const latestMessage = useRef<HTMLDivElement | null>(null);
+  const sound = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
     const { uid, uname } = parse(document.cookie);
@@ -178,6 +179,15 @@ const Chatbox = ({ messageProps }: props) => {
     socket.on("get_message", (data) => {
       setMessages((prev) => [...prev, data]);
       scroller();
+      let { uname } = parse(document.cookie);
+      uname = userInfo.name ? userInfo.name : uname;
+      if (data.author_name !== uname) {
+        try {
+          sound.current?.play();
+        } catch (error) {
+          console.log(error);
+        }
+      }
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [socket]);
@@ -219,6 +229,9 @@ const Chatbox = ({ messageProps }: props) => {
       <Head>
         <title>Chat {userInfo.name ? ` | ${userInfo.name}` : " "}</title>
       </Head>
+      <audio ref={sound} className='hidden'>
+        <source src='/notification.ogg' type='audio/ogg' />
+      </audio>
       <div className='flex sm:flex-row flex-col'>
         {windowWidth < 640 ? (
           selectedUser.length > 0 ? (

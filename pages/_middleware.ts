@@ -5,19 +5,22 @@ const middleware = async (req: NextRequest) => {
   const token = req.cookies.access;
 
   const res = NextResponse.next();
+
   if (
     !req.cookies.uname ||
     !req.cookies.uid ||
     req.cookies.uname === "null" ||
     req.cookies.uid === "null"
   ) {
-    try {
-      const { userId, name } = jwt.decode(token) as JwtPayload;
+    if (token) {
+      try {
+        const { userId, name } = jwt.decode(token) as JwtPayload;
 
-      res.cookie("uid", userId, { maxAge: 60 * 60 * 24 * 30 });
-      res.cookie("uname", name, { maxAge: 60 * 60 * 24 * 30 });
-    } catch (error) {
-      console.log(error);
+        res.cookie("uid", userId, { maxAge: 60 * 60 * 24 * 30 });
+        res.cookie("uname", name, { maxAge: 60 * 60 * 24 * 30 });
+      } catch (error) {
+        console.log(error);
+      }
     }
   }
 

@@ -1,8 +1,12 @@
+import Head from "next/head";
 import Link from "next/link";
 
 const Verify = () => {
   return (
     <>
+      <Head>
+        <title>Verify Email | Chat App</title>
+      </Head>
       <div className='flex items-center justify-center h-screen'>
         <div className='text-center'>
           <h3 className='font-medium text-2xl'>Check your email inbox </h3>
