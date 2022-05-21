@@ -180,7 +180,6 @@ const Chatbox = ({ messageProps }: props) => {
       setMessages((prev) => [...prev, data]);
       scroller();
       let { uname } = parse(document.cookie);
-      uname = userInfo.name ? userInfo.name : uname;
       if (data.author_name !== uname) {
         try {
           sound.current?.play();
