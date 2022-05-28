@@ -10,7 +10,7 @@ const Verify = () => {
         <title>Verify Email | Chat App</title>
       </Head>
       <div className='flex items-center justify-center h-screen'>
-        <div className='text-center px-12'>
+        <div className='text-center px-4'>
           <h3 className='font-medium text-2xl'>Check your email inbox </h3>
           <h3 className='my-8'>
             We have sent you a mail with verification link for the account you

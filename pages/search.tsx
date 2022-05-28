@@ -96,7 +96,7 @@ const Search = () => {
             />
             <button
               type='submit'
-              className='basis-1/3 ring-2 bg-blue-500 ring-blue-500 h-10 rounded-r-md font-medium cursor-pointer text-white text-lg'>
+              className='basis-1/3 ring-2 bg-blue-500 ring-blue-500 h-10 rounded-r-md font-medium cursor-pointer text-white  text-md px-2 sm:px-0 sm:text-lg'>
               Search
             </button>
           </div>

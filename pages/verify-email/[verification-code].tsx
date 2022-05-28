@@ -54,7 +54,7 @@ const VerifyEmail = () => {
       <Head>
         <title>Verify Email | Chat App</title>
       </Head>
-      <main className='flex justify-center items-center h-screen px-12'>
+      <main className='flex justify-center items-center h-screen px-4'>
         <div>
           <h3 className='text-center mb-8 font-bold text-2xl'>
             Verify Your Email
