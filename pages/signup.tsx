@@ -8,6 +8,7 @@ import Link from "next/link";
 import { AxiosError } from "axios";
 import { GetServerSidePropsContext } from "next/types";
 import { decode } from "jsonwebtoken";
+import Image from "next/image";
 
 const Signup = () => {
   const {
@@ -29,9 +30,11 @@ const Signup = () => {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState({ p: false, cp: false });
+  const [loading, setLoading] = useState(false);
   const [errorFromServer, setErrorFromServer] = useState("");
 
   const submit = async () => {
+    setLoading(true);
     const password = watch("password");
     const cPassword = watch("cPassword");
 
@@ -50,8 +53,6 @@ const Signup = () => {
       email: watch("email"),
       password: watch("password"),
     };
-
-    reset();
 
     try {
       const res = await axiosInstance.post(
@@ -79,6 +80,9 @@ const Signup = () => {
       setErrorFromServer(
         "Network Error! Please try again later or contact support"
       );
+    } finally {
+      reset();
+      setLoading(false);
     }
   };
 
@@ -219,11 +223,23 @@ const Signup = () => {
               {errorFromServer.length !== 0 && errorFromServer}
             </span>
             <div className='grid place-items-center'>
-              <input
-                type='submit'
-                value='Sign Up'
-                className='my-4 px-4 py-2 rounded-md bg-gradient-to-bl from-blue-400 hover:from-blue-300  to-blue-600 hover:to-blue-500 text-white font-bold tracking-wider cursor-pointer'
-              />
+              {loading ? (
+                <button
+                  type='submit'
+                  className='my-4 flex items-center justify-center px-8  rounded-md bg-gradient-to-bl from-blue-300 to-blue-500 text-white font-bold tracking-wider cursor-not-allowed'>
+                  <Image
+                    src='/loader.gif'
+                    alt=''
+                    height='40px'
+                    width='40px'></Image>
+                </button>
+              ) : (
+                <input
+                  type='submit'
+                  value='Sign Up'
+                  className='my-4 px-4 py-2 rounded-md bg-gradient-to-bl from-blue-400 hover:from-blue-300  to-blue-600 hover:to-blue-500 text-white font-bold tracking-wider cursor-pointer'
+                />
+              )}
             </div>
           </form>
         </div>

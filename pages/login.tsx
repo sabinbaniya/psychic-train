@@ -2,6 +2,7 @@ import { AxiosError } from "axios";
 import { decode } from "jsonwebtoken";
 import Head from "next/head";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import { GetServerSidePropsContext } from "next/types";
 import { useState } from "react";
@@ -27,15 +28,15 @@ const Login = () => {
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errorFromServer, setErrorFromServer] = useState("");
 
   const submit = async () => {
+    setLoading(true);
     const data = {
       email: watch("email"),
       password: watch("password"),
     };
-
-    reset();
 
     try {
       const res = await axiosInstance.post(
@@ -75,6 +76,10 @@ const Login = () => {
       setErrorFromServer(
         "Network Error! Please try again later or contact support"
       );
+    } finally {
+      reset();
+
+      setLoading(false);
     }
   };
 
@@ -158,12 +163,25 @@ const Login = () => {
             <span className='text-red-400 text-md font-bold'>
               {errorFromServer.length !== 0 && errorFromServer}
             </span>
+
             <div className='grid place-items-center'>
-              <input
-                type='submit'
-                value='Log In'
-                className='my-4 px-4 py-2 rounded-md bg-gradient-to-bl from-blue-400 hover:from-blue-300  to-blue-600 hover:to-blue-500 text-white font-bold tracking-wider cursor-pointer'
-              />
+              {loading ? (
+                <button
+                  type='submit'
+                  className='my-4 flex items-center justify-center px-8  rounded-md bg-gradient-to-bl from-blue-300 to-blue-500 text-white font-bold tracking-wider cursor-not-allowed'>
+                  <Image
+                    src='/loader.gif'
+                    alt=''
+                    height='40px'
+                    width='40px'></Image>
+                </button>
+              ) : (
+                <input
+                  type='submit'
+                  value='Log In'
+                  className='my-4 px-4 py-2 rounded-md bg-gradient-to-bl from-blue-400 hover:from-blue-300  to-blue-600 hover:to-blue-500 text-white font-bold tracking-wider cursor-pointer'
+                />
+              )}
             </div>
           </form>
         </div>

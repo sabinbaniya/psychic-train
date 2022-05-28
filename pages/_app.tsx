@@ -38,15 +38,23 @@ function MyApp({ Component, pageProps }: AppProps) {
   // }
 
   if (
-    router.asPath === "/signup" ||
-    router.asPath === "/login" ||
-    router.asPath === "/verify" ||
-    router.asPath.startsWith("/verify-email")
+    router.asPath === "/" ||
+    router.asPath === "/profile" ||
+    router.asPath === "/search" ||
+    router.asPath.startsWith("/chat/")
   ) {
     return (
       <>
         <NextNProgress color='#3b83f6' />
-        <Component {...pageProps} />
+        <SelectedUserProvider>
+          <UserInfoProvider>
+            <FriendListContextProvider>
+              <Layout>
+                <Component {...pageProps} />
+              </Layout>
+            </FriendListContextProvider>
+          </UserInfoProvider>
+        </SelectedUserProvider>
       </>
     );
   }
@@ -54,15 +62,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <NextNProgress color='#3b83f6' />
-      <SelectedUserProvider>
-        <UserInfoProvider>
-          <FriendListContextProvider>
-            <Layout>
-              <Component {...pageProps} />
-            </Layout>
-          </FriendListContextProvider>
-        </UserInfoProvider>
-      </SelectedUserProvider>
+      <Component {...pageProps} />
     </>
   );
 }
