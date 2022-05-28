@@ -14,7 +14,9 @@ import { Sidebar } from "../../src/components";
 import { SelectedUserContext } from "../../context/SelectedUserContext";
 import { UserInfoContext } from "../../context/UserInfoContext";
 import Message from "../../src/components/Message";
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, GetServerSidePropsContext } from "next";
+import { AxiosError } from "axios";
+import { decode } from "jsonwebtoken";
 
 interface IMessage {
   author: string;
@@ -38,7 +40,22 @@ const URL = process.env.NEXT_PUBLIC_URL as string;
 
 const socket = io(URL);
 
-export const getServerSideProps: GetServerSideProps = async (context) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      throw new Error("No JWT");
+    }
+    decode(context.req.cookies.access);
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
   let messageProps: IMessage[] | null = null;
   const cookie = serialize("access", context.req.cookies.access);
   try {
@@ -146,9 +163,12 @@ const Chatbox = ({ messageProps }: props) => {
           ]);
         }
 
+        console.log(res.data);
+
         return setMessages(res.data.messages.messageId.reverse());
       } catch (error) {
-        console.log(error);
+        const err = error as AxiosError;
+        // console.log(err.code);
         setError(true);
       } finally {
         setLoading(false);

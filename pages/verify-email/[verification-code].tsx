@@ -1,5 +1,7 @@
+import { decode } from "jsonwebtoken";
 import Head from "next/head";
 import Link from "next/link";
+import { GetServerSidePropsContext } from "next/types";
 import { useEffect, useState } from "react";
 import axiosInstance from "../../axios/axiosInstance";
 
@@ -52,7 +54,7 @@ const VerifyEmail = () => {
       <Head>
         <title>Verify Email | Chat App</title>
       </Head>
-      <main className='flex justify-center items-center h-screen'>
+      <main className='flex justify-center items-center h-screen px-12'>
         <div>
           <h3 className='text-center mb-8 font-bold text-2xl'>
             Verify Your Email
@@ -92,6 +94,29 @@ const VerifyEmail = () => {
       </main>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      return {
+        props: {},
+      };
+    }
+    decode(context.req.cookies.access);
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {},
+    };
+  }
 };
 
 export default VerifyEmail;

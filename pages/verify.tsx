@@ -1,5 +1,7 @@
+import { decode } from "jsonwebtoken";
 import Head from "next/head";
 import Link from "next/link";
+import { GetServerSidePropsContext } from "next/types";
 
 const Verify = () => {
   return (
@@ -8,7 +10,7 @@ const Verify = () => {
         <title>Verify Email | Chat App</title>
       </Head>
       <div className='flex items-center justify-center h-screen'>
-        <div className='text-center'>
+        <div className='text-center px-12'>
           <h3 className='font-medium text-2xl'>Check your email inbox </h3>
           <h3 className='my-8'>
             We have sent you a mail with verification link for the account you
@@ -27,6 +29,29 @@ const Verify = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      return {
+        props: {},
+      };
+    }
+    decode(context.req.cookies.access);
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {},
+    };
+  }
 };
 
 export default Verify;

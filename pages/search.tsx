@@ -6,6 +6,8 @@ import axiosInstance from "../axios/axiosInstance";
 import { FaUserFriends } from "react-icons/fa";
 import { AiOutlineUserAdd } from "react-icons/ai";
 import Link from "next/link";
+import { GetServerSidePropsContext } from "next/types";
+import { decode } from "jsonwebtoken";
 
 interface ISearchList {
   name: string;
@@ -174,6 +176,27 @@ const Search = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      throw new Error("No JWT");
+    }
+    decode(context.req.cookies.access);
+    return {
+      props: {},
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
 };
 
 export default Search;

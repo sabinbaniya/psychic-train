@@ -1,7 +1,9 @@
 import { AxiosError } from "axios";
+import { decode } from "jsonwebtoken";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
@@ -168,6 +170,29 @@ const Login = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      return {
+        props: {},
+      };
+    }
+    decode(context.req.cookies.access);
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {},
+    };
+  }
 };
 
 export default Login;

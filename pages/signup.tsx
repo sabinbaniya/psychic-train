@@ -6,6 +6,8 @@ import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
 import axiosInstance from "../axios/axiosInstance";
 import Link from "next/link";
 import { AxiosError } from "axios";
+import { GetServerSidePropsContext } from "next/types";
+import { decode } from "jsonwebtoken";
 
 const Signup = () => {
   const {
@@ -228,6 +230,29 @@ const Signup = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      return {
+        props: {},
+      };
+    }
+    decode(context.req.cookies.access);
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  } catch (error) {
+    return {
+      props: {},
+    };
+  }
 };
 
 export default Signup;

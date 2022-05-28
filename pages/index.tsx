@@ -1,7 +1,8 @@
-import type { NextPage } from "next";
+import type { GetServerSidePropsContext, NextPage } from "next";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Chatbox, Sidebar } from "../src/components";
+import { decode } from "jsonwebtoken";
 
 const Home: NextPage = () => {
   const [windowWidth, setWindowWidth] = useState(0);
@@ -38,6 +39,27 @@ const Home: NextPage = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      throw new Error("No JWT");
+    }
+    decode(context.req.cookies.access);
+    return {
+      props: {},
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
 };
 
 export default Home;

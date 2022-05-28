@@ -9,6 +9,8 @@ import NextNProgress from "nextjs-progressbar";
 import { io } from "socket.io-client";
 import { useEffect } from "react";
 import { parse } from "cookie";
+import { GetServerSidePropsContext } from "next/types";
+import { decode } from "jsonwebtoken";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();

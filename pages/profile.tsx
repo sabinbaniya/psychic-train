@@ -1,6 +1,8 @@
+import { decode } from "jsonwebtoken";
 import Head from "next/head";
 import Image from "next/image";
 import Link from "next/link";
+import { GetServerSidePropsContext } from "next/types";
 import { useEffect, useState } from "react";
 import { BiMessageDetail } from "react-icons/bi";
 import axiosInstance from "../axios/axiosInstance";
@@ -112,6 +114,27 @@ const Profile = () => {
       </div>
     </>
   );
+};
+
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext
+) => {
+  try {
+    if (!context.req.cookies.access) {
+      throw new Error("No JWT");
+    }
+    decode(context.req.cookies.access);
+    return {
+      props: {},
+    };
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/login",
+        permanent: false,
+      },
+    };
+  }
 };
 
 export default Profile;

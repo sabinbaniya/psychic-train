@@ -1,6 +1,8 @@
+import { decode } from "jsonwebtoken";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { GetServerSidePropsContext } from "next/types";
 import { useContext, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import axiosInstance from "../../axios/axiosInstance";
