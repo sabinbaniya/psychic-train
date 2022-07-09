@@ -1,5 +1,5 @@
-import UserModel from "../../../lib/model/usermodel";
-import clientPromise from "../../../lib/db";
+import UserModel from "../../../lib/model/userModel.js";
+import clientPromise from "../../../lib/db.js";
 import mongoose from "mongoose";
 
 const login = async (req, res) => {

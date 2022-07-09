@@ -1,4 +1,4 @@
-import UserModel from "../../model/usermodel";
+import UserModel from "../../../model/userModel.js";
 
 const verifyEmail = async (req, res) => {
   const verificationCode = req.body.verificationCode;
