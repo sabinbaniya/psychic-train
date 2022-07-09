@@ -3,7 +3,7 @@ import Head from "next/head";
 import Link from "next/link";
 import { GetServerSidePropsContext } from "next/types";
 import { useEffect, useState } from "react";
-import axiosInstance from "../../axios/axiosInstance";
+import { axiosAuthInstance } from "../../axios/axiosInstance";
 
 const VerifyEmail = () => {
   const [verified, setVerified] = useState<boolean | null>(null);
@@ -12,7 +12,7 @@ const VerifyEmail = () => {
 
     const sendVerificationRequest = async () => {
       try {
-        const res = await axiosInstance.post("/api/auth/verifyemail", {
+        const res = await axiosAuthInstance.post("/api/auth/verifyemail", {
           verificationCode,
         });
 
