@@ -3,6 +3,7 @@ import Head from "next/head";
 import { useEffect, useState } from "react";
 import { Chatbox, Sidebar } from "../src/components";
 import { decode } from "jsonwebtoken";
+import clientPromise from "../lib/db";
 
 const Home: NextPage = () => {
   const [windowWidth, setWindowWidth] = useState(0);

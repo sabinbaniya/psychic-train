@@ -1,11 +1,9 @@
-import { decode } from "jsonwebtoken";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { GetServerSidePropsContext } from "next/types";
 import { useContext, useState } from "react";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import axiosInstance from "../../axios/axiosInstance";
+import { axiosAuthInstance } from "../../axios/axiosInstance";
 import { UserInfoContext } from "../../context/UserInfoContext";
 
 const Navbar = () => {
@@ -17,7 +15,7 @@ const Navbar = () => {
     try {
       document.cookie = "uname=null; expires=-1; path=/; domain=localhost";
       document.cookie = "uid=null; expires=-1; path=/; domain=localhost";
-      await axiosInstance.get("/api/auth/logout");
+      await axiosAuthInstance.get("/api/auth/logout");
       router.push("/login");
     } catch (error) {
       console.log(error);

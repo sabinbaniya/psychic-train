@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import axiosInstance from "../axios/axiosInstance";
+import { axiosAuthInstance } from "../axios/axiosInstance";
 import Link from "next/link";
 import { AxiosError } from "axios";
 import { GetServerSidePropsContext } from "next/types";
@@ -55,7 +55,7 @@ const Signup = () => {
     };
 
     try {
-      const res = await axiosInstance.post(
+      const res = await axiosAuthInstance.post(
         "/api/auth/signup",
         JSON.stringify(data)
       );

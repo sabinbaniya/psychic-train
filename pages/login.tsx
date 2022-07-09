@@ -8,7 +8,7 @@ import { GetServerSidePropsContext } from "next/types";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import axiosInstance from "../axios/axiosInstance";
+import { axiosAuthInstance } from "../axios/axiosInstance";
 
 const Login = () => {
   const {
@@ -39,7 +39,7 @@ const Login = () => {
     };
 
     try {
-      const res = await axiosInstance.post(
+      const res = await axiosAuthInstance.post(
         "/api/auth/login",
         JSON.stringify(data)
       );
