@@ -20,7 +20,7 @@ const Verify = () => {
             Can{"'"}t find the email? Also try checking your spam folder
           </p>
           <p className='my-8 text-gray-500'>
-            Already verified? Try{" "}
+            Already verified? Try
             <Link href='/login'>
               <a className='underline'>Logging In</a>
             </Link>
