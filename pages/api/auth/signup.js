@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import sendMail from "../../../lib/helpers/sendMail";
+import sendMail from "./helpers/sendMail";
 import clientPromise from "../../../lib/db";
 import mongoose from "mongoose";
 import UserModel from "../../../lib/model/userModel";

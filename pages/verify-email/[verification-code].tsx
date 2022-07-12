@@ -12,7 +12,7 @@ const VerifyEmail = () => {
 
     const sendVerificationRequest = async () => {
       try {
-        const res = await axiosAuthInstance.post("/api/auth/verifyemail", {
+        const res = await axiosAuthInstance.post("/api/auth/verifyEmail", {
           verificationCode,
         });
 
